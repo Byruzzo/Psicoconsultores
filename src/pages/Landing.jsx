@@ -6,6 +6,7 @@ import Especialidades from "../components/Especialidades";
 import Modalidades from "../components/Modalidades";
 import Proceso from "../components/Proceso";
 import Precios from "../components/Precios";
+import Reservar from "../components/Reservar";
 import Testimonios from "../components/Testimonios";
 import FAQ from "../components/FAQ";
 import Contacto from "../components/Contacto";
@@ -21,6 +22,7 @@ const Landing = () => {
       <Modalidades />
       <Proceso />
       <Precios />
+      <Reservar />
       <Testimonios />
       <FAQ />
       <Contacto />

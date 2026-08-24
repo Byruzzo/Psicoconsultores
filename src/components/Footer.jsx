@@ -46,6 +46,11 @@ const Footer = () => {
                 </button>
               </li>
               <li>
+                <button onClick={() => scrollTo("reservar")} className="hover:text-lavender-600 dark:hover:text-lavender-300 transition-colors">
+                  Reservar hora
+                </button>
+              </li>
+              <li>
                 <button onClick={() => scrollTo("preguntas")} className="hover:text-lavender-600 dark:hover:text-lavender-300 transition-colors">
                   Preguntas frecuentes
                 </button>

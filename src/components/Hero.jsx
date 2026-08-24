@@ -71,15 +71,16 @@ const Hero = () => {
 
             <div className="pt-2 md:pt-4 space-y-3">
               <div className="flex flex-col sm:flex-row gap-3 md:gap-4 items-stretch sm:items-center">
-                <a
-                  href={whatsappHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  onClick={() => {
+                    const el = document.getElementById("reservar");
+                    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+                  }}
                   className="px-8 md:px-10 py-4 md:py-5 bg-gradient-to-r from-lavender-500 to-lavender-400 hover:from-lavender-600 hover:to-lavender-500 text-white font-bold text-lg rounded-2xl shadow-xl shadow-lavender-500/30 transition-all transform hover:-translate-y-1 hover:scale-[1.02] flex items-center justify-center gap-3 animate-[pulseGlow_2.5s_ease-in-out_infinite]"
                 >
                   Agendar mi hora
                   <ArrowRight className="w-5 h-5" />
-                </a>
+                </button>
 
                 <button
                   onClick={() => {
@@ -91,10 +92,20 @@ const Hero = () => {
                   Conocer más
                 </button>
               </div>
-              <p className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 font-medium pl-1">
-                <Clock3 className="w-4 h-4 text-lavender-500" />
-                Sesiones de 50 minutos · primera consulta sin compromiso
-              </p>
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 pl-1">
+                <p className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 font-medium">
+                  <Clock3 className="w-4 h-4 text-lavender-500" />
+                  Sesiones de 50 minutos
+                </p>
+                <a
+                  href={whatsappHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-medium text-lavender-600 dark:text-lavender-300 hover:underline"
+                >
+                  ¿Preguntas? Escribime por WhatsApp
+                </a>
+              </div>
             </div>
           </div>
 

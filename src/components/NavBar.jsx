@@ -8,6 +8,7 @@ const NAV_ITEMS = [
   { label: "Especialidades", id: "especialidades" },
   { label: "Modalidad", id: "modalidad" },
   { label: "Precios", id: "precios" },
+  { label: "Reservar", id: "reservar" },
   { label: "Preguntas", id: "preguntas" },
 ];
 
@@ -96,7 +97,7 @@ const NavBar = () => {
           <div className="flex items-center gap-2 sm:gap-3">
             <ThemeToggleButton className="p-2 text-slate-600 dark:text-slate-300 glass-pill hover:bg-white/80 dark:hover:bg-slate-700/80" />
             <button
-              onClick={() => scrollToSection("contacto")}
+              onClick={() => scrollToSection("reservar")}
               className="hidden md:block bg-gradient-to-r from-lavender-500 to-lavender-400 hover:from-lavender-600 hover:to-lavender-500 text-white text-sm font-semibold px-6 py-2.5 rounded-xl shadow-lg shadow-lavender-500/25 transition-all duration-300 transform hover:-translate-y-0.5"
             >
               Agendar hora
@@ -127,7 +128,7 @@ const NavBar = () => {
             </button>
           ))}
           <button
-            onClick={() => scrollToSection("contacto")}
+            onClick={() => scrollToSection("reservar")}
             className="px-8 py-4 bg-gradient-to-r from-lavender-500 to-lavender-400 text-white text-xl font-bold rounded-2xl shadow-xl shadow-lavender-500/20"
           >
             Agendar hora

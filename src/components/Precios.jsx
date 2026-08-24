@@ -61,7 +61,7 @@ const Precios = () => {
               </ul>
               <button
                 onClick={() => {
-                  const el = document.getElementById("contacto");
+                  const el = document.getElementById("reservar");
                   if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
                 }}
                 className={`w-full py-3.5 rounded-2xl font-bold transition-all ${
