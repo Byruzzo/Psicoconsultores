@@ -3,10 +3,9 @@ import { CreditCard, CalendarCheck, ArrowRight, Info } from "lucide-react";
 
 // Placeholders — reemplazar por los links reales:
 // - Links de pago: Mercado Pago (dashboard → Tu negocio → Cobros → Link de pago)
-// - Link de horarios: Google Calendar → Crear → Horario de reservas → activar Google Meet → Publicar
 const MERCADOPAGO_LINK_INDIVIDUAL = "https://mpago.la/tu-link-sesion-individual";
 const MERCADOPAGO_LINK_PAREJA = "https://mpago.la/tu-link-sesion-pareja";
-const GOOGLE_CALENDAR_BOOKING_LINK = "https://calendar.app.google/tu-link-de-reservas";
+const GOOGLE_CALENDAR_BOOKING_LINK = "https://calendar.app.google/Xo3LxzuAGjwUrocUA";
 
 const planes = [
   {
