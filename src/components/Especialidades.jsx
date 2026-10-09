@@ -9,8 +9,8 @@ const especialidades = [
   },
   {
     icon: CloudRain,
-    title: "Depresión",
-    desc: "Acompañamiento en procesos de ánimo bajo y pérdida de motivación.",
+    title: "Trastornos del estado del ánimo",
+    desc: "Acompañamiento en depresión, ánimo bajo y pérdida de motivación.",
   },
   {
     icon: HeartHandshake,
@@ -29,8 +29,8 @@ const especialidades = [
   },
   {
     icon: Waves,
-    title: "Estrés",
-    desc: "Herramientas para la sobrecarga laboral y emocional del día a día.",
+    title: "Estrés Post Traumático",
+    desc: "Acompañamiento en procesos de trauma y sus efectos en el día a día.",
   },
 ];
 

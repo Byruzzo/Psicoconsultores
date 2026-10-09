@@ -8,13 +8,13 @@ const MERCADOPAGO_LINK_PAREJA = "https://mpago.la/tu-link-sesion-pareja";
 
 // Horario de reservas de Google Calendar (se incrusta en la página).
 const GOOGLE_CALENDAR_BOOKING_URL =
-  "https://calendar.google.com/calendar/appointments/schedules/AcZssZ2DUmw5DiJJD-wACp8Sis74ScIxp4VpsHXwvgc4arnCkHKnHN78cySODdMxdl56hvTDqfzRlwCv";
+  "https://calendar.google.com/calendar/appointments/schedules/AcZssZ3LTrhsV1ZbUERxxuw-6y6HGnY61PJmEUpN0f9eNy4cX_armVzCKcUIerNt8KSPCewBorx38IDu";
 const GOOGLE_CALENDAR_EMBED_SRC = `${GOOGLE_CALENDAR_BOOKING_URL}?gv=true`;
 
 const planes = [
   {
     title: "Sesión Individual",
-    price: "$XX.000",
+    price: "$25.000",
     mercadoPagoLink: MERCADOPAGO_LINK_INDIVIDUAL,
     accent: "lavender",
   },

@@ -95,7 +95,7 @@ const Hero = () => {
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 pl-1">
                 <p className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 font-medium">
                   <Clock3 className="w-4 h-4 text-lavender-500" />
-                  Sesiones de 50 minutos
+                  Sesiones de 45 minutos
                 </p>
                 <a
                   href={whatsappHref}

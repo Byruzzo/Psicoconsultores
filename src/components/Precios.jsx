@@ -4,8 +4,8 @@ import { Check, Info } from "lucide-react";
 const planes = [
   {
     title: "Sesión Individual",
-    price: "$XX.000",
-    desc: "Sesión de 50 minutos, online o presencial.",
+    price: "$25.000",
+    desc: "Sesión de 45 minutos, online o presencial.",
     features: ["Boleta reembolsable en Isapre", "Agenda flexible", "Seguimiento entre sesiones"],
     highlight: false,
   },
