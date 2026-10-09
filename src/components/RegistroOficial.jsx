@@ -1,13 +1,12 @@
 import React from "react";
-import { ShieldCheck, ExternalLink } from "lucide-react";
+import { ShieldCheck, ExternalLink, FileCheck2 } from "lucide-react";
 
-// TODO: reemplazar por el N° de Registro real de Carla en la
-// Superintendencia de Salud (no es el RUT, es un número distinto que
-// entrega la Superintendencia al inscribirse en el RNPI).
-const N_REGISTRO = "Pendiente";
+const N_REGISTRO = "656686";
 const RUT = "19.184.909-4";
+const CODIGO_VALIDACION = "POBU8Lqgh";
 
 const RNPI_URL = "https://rnpi.superdesalud.gob.cl/";
+const CERTIFICADO_URL = "/certificado-superintendencia.pdf";
 
 const RegistroOficial = () => {
   return (
@@ -36,7 +35,7 @@ const RegistroOficial = () => {
             </div>
 
             <a
-              href={RNPI_URL}
+              href={CERTIFICADO_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-sage-500 hover:bg-sage-600 text-white font-bold text-sm shadow-lg shadow-sage-500/25 transition-all"
@@ -45,14 +44,26 @@ const RegistroOficial = () => {
             </a>
           </div>
 
-          <div className="mt-8 pt-6 border-t border-white/40 dark:border-white/10 flex items-center gap-4">
-            <span className="text-3xl font-serif text-slate-400 dark:text-slate-500 select-none">Ψ</span>
-            <div>
-              <p className="font-bold text-slate-800 dark:text-slate-100">Ps. Carla Ruz Pardo</p>
-              <p className="text-sm text-slate-500 dark:text-slate-400">Psicóloga Clínica</p>
-              <p className="text-sm text-slate-500 dark:text-slate-400">{RUT}</p>
-              <p className="text-sm text-slate-500 dark:text-slate-400">N°Reg: {N_REGISTRO}</p>
+          <div className="mt-8 pt-6 border-t border-white/40 dark:border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+            <div className="flex items-center gap-4">
+              <span className="text-3xl font-serif text-slate-400 dark:text-slate-500 select-none">Ψ</span>
+              <div>
+                <p className="font-bold text-slate-800 dark:text-slate-100">Ps. Carla Ruz Pardo</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">Psicóloga Clínica</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">{RUT}</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">N°Reg: {N_REGISTRO}</p>
+              </div>
             </div>
+
+            <a
+              href={RNPI_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-lavender-600 dark:hover:text-lavender-300"
+            >
+              <FileCheck2 className="w-3.5 h-3.5" />
+              Verificar código {CODIGO_VALIDACION} en RNPI
+            </a>
           </div>
         </div>
       </div>
