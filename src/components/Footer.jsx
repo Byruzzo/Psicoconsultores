@@ -72,7 +72,7 @@ const Footer = () => {
             <ul className="space-y-3 text-sm text-slate-500 dark:text-slate-400 mb-6">
               <li className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-lavender-500" />
-                carlaruzpardo@gmail.com
+                psiconsultoresruz@gmail.com
               </li>
               <li className="flex items-center gap-2">
                 <Globe className="w-4 h-4 text-lavender-500" />

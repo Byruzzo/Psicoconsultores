@@ -1,23 +1,57 @@
 import React from "react";
 import { Quote } from "lucide-react";
 
+// Comentarios de ejemplo (placeholder) — reemplazar por testimonios reales
+// de pacientes, con su autorización, antes de publicar el sitio.
 const testimonios = [
   {
-    texto:
-      "Placeholder de testimonio. Aquí un paciente cuenta brevemente cómo le ayudó el proceso terapéutico.",
-    nombre: "Paciente A.",
+    texto: "Comentario de ejemplo. Sentí mucha cercanía desde la primera sesión, me ayudó a ordenar lo que estaba viviendo.",
+    nombre: "Javiera M.",
     detalle: "Terapia individual",
   },
   {
-    texto:
-      "Placeholder de testimonio. Un comentario sobre la cercanía y profesionalismo durante las sesiones.",
-    nombre: "Paciente B.",
+    texto: "Comentario de ejemplo. Nos dio herramientas concretas para comunicarnos mejor como pareja.",
+    nombre: "Tomás R.",
     detalle: "Terapia de pareja",
   },
   {
-    texto:
-      "Placeholder de testimonio. Sobre la comodidad de la modalidad online y la flexibilidad de horarios.",
-    nombre: "Paciente C.",
+    texto: "Comentario de ejemplo. La modalidad online hizo mucho más fácil mantener la constancia en el proceso.",
+    nombre: "Camila S.",
+    detalle: "Terapia individual",
+  },
+  {
+    texto: "Comentario de ejemplo. Profesional y muy empática, me sentí escuchado en todo momento.",
+    nombre: "Matías F.",
+    detalle: "Terapia individual",
+  },
+  {
+    texto: "Comentario de ejemplo. Nos ayudó a entender patrones que veníamos repitiendo hace años.",
+    nombre: "Antonia V.",
+    detalle: "Terapia de pareja",
+  },
+  {
+    texto: "Comentario de ejemplo. Agendar y tener la sesión por videollamada fue simple y cómodo.",
+    nombre: "Benjamín L.",
+    detalle: "Terapia individual",
+  },
+  {
+    texto: "Comentario de ejemplo. Un espacio donde realmente pude bajar la guardia y avanzar.",
+    nombre: "Francisca P.",
+    detalle: "Terapia individual",
+  },
+  {
+    texto: "Comentario de ejemplo. Recomendado para parejas que quieren trabajar la comunicación en serio.",
+    nombre: "Diego A.",
+    detalle: "Terapia de pareja",
+  },
+  {
+    texto: "Comentario de ejemplo. Me ayudó a manejar la ansiedad con herramientas que uso hasta hoy.",
+    nombre: "Valentina C.",
+    detalle: "Terapia individual",
+  },
+  {
+    texto: "Comentario de ejemplo. Horarios flexibles y un trato siempre cercano y profesional.",
+    nombre: "Ignacio H.",
     detalle: "Terapia individual",
   },
 ];
@@ -34,12 +68,17 @@ const Testimonios = () => {
             Lo que dicen quienes ya se atendieron
           </h2>
         </div>
+      </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
-          {testimonios.map((t) => (
-            <div key={t.nombre} className="glass rounded-3xl p-7 flex flex-col">
+      <div className="max-w-[100vw] overflow-x-auto px-4 sm:px-6 lg:px-8 [scrollbar-width:thin] snap-x snap-mandatory">
+        <div className="flex gap-5 w-max mx-auto pb-4">
+          {testimonios.map((t, i) => (
+            <div
+              key={`${t.nombre}-${i}`}
+              className="glass rounded-3xl p-7 flex flex-col w-[280px] shrink-0 snap-start"
+            >
               <Quote className="w-8 h-8 text-lavender-300 dark:text-lavender-500/50 mb-4" />
-              <p className="text-slate-700 dark:text-slate-300 leading-relaxed mb-6 flex-1">
+              <p className="text-slate-700 dark:text-slate-300 leading-relaxed mb-6 flex-1 text-sm">
                 {t.texto}
               </p>
               <div>

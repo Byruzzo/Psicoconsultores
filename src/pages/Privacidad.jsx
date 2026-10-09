@@ -25,15 +25,15 @@ export default function Privacidad() {
         <div className="mt-8 space-y-8 text-gray-700 dark:text-slate-300">
           <Section title="1. Quién soy">
             <p>
-              Carla Ruz (en adelante, “yo” o “la psicóloga”) es la responsable
+              Carla Ruz Pardo (en adelante, “yo” o “la psicóloga”) es la responsable
               de este sitio web y de la atención psicológica que en él se
               ofrece. Esta política explica qué datos personales recopilo a
               través del sitio, con qué finalidad y cuáles son tus derechos.
             </p>
             <p>
               Para cualquier consulta sobre tus datos puedes escribirme a{" "}
-              <a href="mailto:contacto@placeholder.cl" className="link">
-                contacto@placeholder.cl
+              <a href="mailto:psiconsultoresruz@gmail.com" className="link">
+                psiconsultoresruz@gmail.com
               </a>
               .
             </p>
@@ -43,17 +43,17 @@ export default function Privacidad() {
             <p>Cuando completas el formulario de contacto del sitio, recopilo:</p>
             <ul>
               <li>Nombre.</li>
-              <li>Correo electrónico o número de teléfono.</li>
+              <li>Correo electrónico.</li>
               <li>El mensaje que decidas escribir.</li>
             </ul>
             <p>
-              Al enviarlo, además de guardarse de forma segura, se abre
-              WhatsApp con un mensaje precargado que puedes enviar para
-              contactarme directamente por ese medio.
+              Al enviarlo, además de guardarse de forma segura, se abre tu
+              programa de correo con un mensaje precargado que puedes enviar
+              para contactarme directamente por ese medio.
             </p>
             <p>
-              Si me escribes directamente por correo o WhatsApp, recibo la
-              información de contacto y el contenido de tu mensaje.
+              Si me escribes directamente por correo, recibo la información
+              de contacto y el contenido de tu mensaje.
             </p>
           </Section>
 
@@ -109,8 +109,8 @@ export default function Privacidad() {
                 solicitudes de contacto.
               </li>
               <li>
-                <strong>WhatsApp / Meta</strong> — canal de contacto directo,
-                sujeto a su propia política de privacidad.
+                <strong>Google Calendar</strong> — agenda de horarios
+                disponibles, sujeto a su propia política de privacidad.
               </li>
             </ul>
           </Section>
@@ -129,8 +129,8 @@ export default function Privacidad() {
             </ul>
             <p>
               Para ejercerlos, escríbeme a{" "}
-              <a href="mailto:contacto@placeholder.cl" className="link">
-                contacto@placeholder.cl
+              <a href="mailto:psiconsultoresruz@gmail.com" className="link">
+                psiconsultoresruz@gmail.com
               </a>
               . Responderé en los plazos que establece la ley.
             </p>
@@ -155,8 +155,8 @@ export default function Privacidad() {
           <Section title="11. Contacto">
             <p>
               ¿Dudas sobre esta política o sobre tus datos? Escríbeme a{" "}
-              <a href="mailto:contacto@placeholder.cl" className="link">
-                contacto@placeholder.cl
+              <a href="mailto:psiconsultoresruz@gmail.com" className="link">
+                psiconsultoresruz@gmail.com
               </a>
               .
             </p>

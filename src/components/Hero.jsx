@@ -1,8 +1,7 @@
 import React from "react";
 import { Video, ShieldCheck, Clock3, ArrowRight } from "lucide-react";
 
-const WHATSAPP_NUMBER = "56930010448"; // +56 9 3001 0448 — del CV de Carla
-const WHATSAPP_MESSAGE = "Hola Carla, quisiera agendar una hora de terapia.";
+const CONTACT_EMAIL = "psiconsultoresruz@gmail.com";
 
 const HeroAvatar = () => (
   <div className="relative w-full flex items-center justify-center">
@@ -33,8 +32,6 @@ const HeroAvatar = () => (
 );
 
 const Hero = () => {
-  const whatsappHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
-
   return (
     <section
       id="inicio"
@@ -96,12 +93,10 @@ const Hero = () => {
                   Sesiones de 45 minutos
                 </p>
                 <a
-                  href={whatsappHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href={`mailto:${CONTACT_EMAIL}`}
                   className="text-sm font-medium text-lavender-600 dark:text-lavender-300 hover:underline"
                 >
-                  ¿Preguntas? Escribime por WhatsApp
+                  ¿Preguntas? Escribime por correo
                 </a>
               </div>
             </div>

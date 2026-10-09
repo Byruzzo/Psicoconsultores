@@ -5,7 +5,7 @@ const pasos = [
   {
     icon: CalendarCheck,
     title: "Agenda tu hora",
-    desc: "Escríbeme por WhatsApp o completa el formulario de contacto para coordinar día y horario.",
+    desc: "Elegí tu horario en el calendario y confirmá tu sesión con el pago.",
   },
   {
     icon: MessagesSquare,

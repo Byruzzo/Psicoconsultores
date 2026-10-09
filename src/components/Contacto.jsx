@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Mail, Phone, Globe, Send, Loader2 } from "lucide-react";
+import { Mail, Globe, Send, Loader2 } from "lucide-react";
 import { supabase } from "../lib/supabase";
 
-const WHATSAPP_NUMBER = "56930010448"; // +56 9 3001 0448
+const CONTACT_EMAIL = "psiconsultoresruz@gmail.com";
 
 const sanitize = (str, maxLen = 300) => {
   if (!str) return "";
@@ -12,6 +12,8 @@ const sanitize = (str, maxLen = 300) => {
     .trim()
     .slice(0, maxLen);
 };
+
+const esEmailValido = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 const Contacto = () => {
   const [form, setForm] = useState({ nombre: "", contacto: "", mensaje: "" });
@@ -29,15 +31,15 @@ const Contacto = () => {
     const contacto = sanitize(form.contacto, 100);
     const mensaje = sanitize(form.mensaje, 400);
 
-    if (!nombre || !contacto) {
-      setError("Completa tu nombre y un medio de contacto.");
+    if (!nombre || !esEmailValido(contacto)) {
+      setError("Completa tu nombre y un correo electrónico válido.");
       return;
     }
 
     setIsSubmitting(true);
 
     // Queda como respaldo en la base de datos aunque la persona no
-    // termine de enviar el WhatsApp. Si Supabase no está configurado
+    // termine de enviar el correo. Si Supabase no está configurado
     // todavía (ver .env.example), `supabase` es null y se omite.
     if (supabase) {
       const { error: dbError } = await supabase
@@ -46,9 +48,10 @@ const Contacto = () => {
       if (dbError) console.error("Error guardando la solicitud:", dbError);
     }
 
-    const texto = `Hola Carla, soy ${nombre} (${contacto}).${mensaje ? ` ${mensaje}` : " Quisiera agendar una hora de terapia."}`;
-    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(texto)}`;
-    window.open(url, "_blank", "noopener,noreferrer");
+    const asunto = `Solicitud de hora — ${nombre}`;
+    const cuerpo = `Hola Carla, soy ${nombre} (${contacto}).${mensaje ? ` ${mensaje}` : " Quisiera agendar una hora de terapia."}`;
+    const url = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`;
+    window.location.href = url;
 
     setIsSubmitting(false);
   };
@@ -64,7 +67,7 @@ const Contacto = () => {
             Contacto
           </span>
           <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mb-4">
-            Demos el primer paso
+            Hablemos
           </h2>
           <p className="text-slate-600 dark:text-slate-400 text-lg">
             Escríbeme y coordinamos tu primera sesión.
@@ -79,20 +82,11 @@ const Contacto = () => {
               </span>
               <div>
                 <p className="font-bold text-slate-800 dark:text-slate-100 text-sm">Correo</p>
-                <p className="text-sm text-slate-500 dark:text-slate-400">carlaruzpardo@gmail.com</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">{CONTACT_EMAIL}</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
               <span className="w-10 h-10 rounded-full bg-sage-100 dark:bg-sage-500/20 text-sage-600 dark:text-sage-300 flex items-center justify-center shrink-0">
-                <Phone className="w-5 h-5" />
-              </span>
-              <div>
-                <p className="font-bold text-slate-800 dark:text-slate-100 text-sm">WhatsApp</p>
-                <p className="text-sm text-slate-500 dark:text-slate-400">+56 9 3001 0448</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <span className="w-10 h-10 rounded-full bg-lavender-100 dark:bg-lavender-500/20 text-lavender-600 dark:text-lavender-300 flex items-center justify-center shrink-0">
                 <Globe className="w-5 h-5" />
               </span>
               <div>
@@ -119,14 +113,14 @@ const Contacto = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 ml-1">
-                Correo o WhatsApp
+                Tu correo electrónico
               </label>
               <input
-                type="text"
+                type="email"
                 name="contacto"
                 maxLength={100}
                 className={inputClass}
-                placeholder="correo@mail.com o +56912345678"
+                placeholder="tucorreo@mail.com"
                 value={form.contacto}
                 onChange={handleChange}
               />
@@ -159,12 +153,12 @@ const Contacto = () => {
                 </>
               ) : (
                 <>
-                  Enviar por WhatsApp <Send className="w-4 h-4" />
+                  Enviar por correo <Send className="w-4 h-4" />
                 </>
               )}
             </button>
             <p className="text-center text-slate-400 dark:text-slate-500 text-xs">
-              Se abrirá WhatsApp con tu mensaje precargado.
+              Se abrirá tu programa de correo con el mensaje precargado.
             </p>
           </form>
         </div>
