@@ -1,5 +1,6 @@
 import React from "react";
 import { Mail, Globe, Instagram, Linkedin } from "lucide-react";
+import Logo from "./Logo";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -15,11 +16,14 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-lavender-400 to-sage-400 flex items-center justify-center text-white font-bold text-xs">
-                CR
-              </span>
-              <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
-                Carla Ruz
+              <Logo className="w-8 h-8" textClassName="text-xs" />
+              <span className="leading-tight">
+                <span className="block text-lg font-bold tracking-tight text-slate-900 dark:text-white">
+                  Psicoconsultores
+                </span>
+                <span className="block text-xs font-medium text-slate-500 dark:text-slate-400">
+                  Psicólogos
+                </span>
               </span>
             </div>
             <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">

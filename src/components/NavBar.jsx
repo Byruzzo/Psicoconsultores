@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Menu, X, Moon, Sun } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
+import Logo from "./Logo";
 
 const NAV_ITEMS = [
   { label: "Inicio", id: "inicio" },
@@ -70,14 +71,13 @@ const NavBar = () => {
             className="flex items-center gap-2.5 cursor-pointer group"
             onClick={() => scrollToSection("inicio")}
           >
-            <span className="w-9 h-9 rounded-xl bg-gradient-to-br from-lavender-400 to-sage-400 flex items-center justify-center text-white font-bold text-sm shadow-md shadow-lavender-500/20 group-hover:scale-105 transition-transform duration-300">
-              CR
-            </span>
-            <span className="font-bold tracking-tight text-slate-800 dark:text-slate-100 leading-tight">
-              Carla Ruz
-              <span className="hidden sm:inline font-medium text-slate-500 dark:text-slate-400">
-                {" "}
-                · Psicóloga
+            <Logo className="w-9 h-9 group-hover:scale-105 transition-transform duration-300" />
+            <span className="leading-tight">
+              <span className="block font-bold tracking-tight text-slate-800 dark:text-slate-100 text-sm">
+                Psicoconsultores
+              </span>
+              <span className="hidden sm:block font-medium text-slate-500 dark:text-slate-400 text-xs">
+                Psicólogos
               </span>
             </span>
           </div>

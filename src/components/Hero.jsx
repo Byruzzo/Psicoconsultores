@@ -1,5 +1,6 @@
 import React from "react";
 import { Video, ShieldCheck, Clock3, ArrowRight } from "lucide-react";
+import Logo from "./Logo";
 
 const CONTACT_EMAIL = "psiconsultoresruz@gmail.com";
 
@@ -7,15 +8,13 @@ const HeroAvatar = () => (
   <div className="relative w-full flex items-center justify-center">
     <div className="absolute w-[280px] h-[280px] sm:w-[340px] sm:h-[340px] md:w-[400px] md:h-[400px] rounded-full bg-gradient-to-br from-lavender-200/60 to-sage-200/60 dark:from-lavender-500/10 dark:to-sage-500/10 blur-2xl -z-10" />
 
-    <div className="glass-strong relative w-[240px] h-[300px] sm:w-[280px] sm:h-[350px] md:w-[320px] md:h-[400px] rounded-[2.5rem] overflow-hidden animate-[float_6s_ease-in-out_infinite]">
-      <img
-        src="/carla.jpg"
-        alt="Carla Ruz Pardo, Psicóloga Clínica"
-        className="w-full h-full object-cover object-top"
-      />
-      <div className="absolute bottom-0 left-0 w-full p-5 bg-gradient-to-t from-black/50 to-transparent">
-        <p className="text-white font-bold text-sm">Carla Ruz Pardo</p>
-        <p className="text-white/80 text-xs">Psicóloga Clínica</p>
+    <div className="glass-strong relative w-[240px] h-[300px] sm:w-[280px] sm:h-[350px] md:w-[320px] md:h-[400px] rounded-[2.5rem] overflow-hidden animate-[float_6s_ease-in-out_infinite] flex flex-col items-center justify-center gap-5 px-6">
+      <Logo className="w-20 h-20 md:w-24 md:h-24 rounded-[1.75rem]" textClassName="text-4xl md:text-5xl" />
+      <div className="text-center">
+        <p className="text-slate-800 dark:text-slate-100 font-extrabold text-xl leading-tight">
+          Psicoconsultores
+        </p>
+        <p className="text-slate-500 dark:text-slate-400 text-sm">Psicólogos</p>
       </div>
     </div>
 
