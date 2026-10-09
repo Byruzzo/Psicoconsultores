@@ -5,7 +5,6 @@ import SobreMi from "../components/SobreMi";
 import Capacitacion from "../components/Capacitacion";
 import Especialidades from "../components/Especialidades";
 import Modalidades from "../components/Modalidades";
-import Proceso from "../components/Proceso";
 import Precios from "../components/Precios";
 import Reservar from "../components/Reservar";
 import Testimonios from "../components/Testimonios";
@@ -22,7 +21,6 @@ const Landing = () => {
       <Capacitacion />
       <Especialidades />
       <Modalidades />
-      <Proceso />
       <Precios />
       <Reservar />
       <Testimonios />

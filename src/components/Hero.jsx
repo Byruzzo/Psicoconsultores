@@ -1,34 +1,93 @@
-import React from "react";
-import { Video, ShieldCheck, Clock3, ArrowRight } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Video, ShieldCheck, Clock3, ArrowRight, CalendarCheck, MessagesSquare, TrendingUp } from "lucide-react";
 import Logo from "./Logo";
 
 const CONTACT_EMAIL = "psiconsultoresruz@gmail.com";
 
-const HeroAvatar = () => (
-  <div className="relative w-full flex items-center justify-center">
-    <div className="absolute w-[280px] h-[280px] sm:w-[340px] sm:h-[340px] md:w-[400px] md:h-[400px] rounded-full bg-gradient-to-br from-lavender-200/60 to-sage-200/60 dark:from-lavender-500/10 dark:to-sage-500/10 blur-2xl -z-10" />
+const pasos = [
+  { icon: Logo, esLogo: true },
+  {
+    icon: CalendarCheck,
+    title: "Agenda tu hora",
+    desc: "Elegí tu horario y confirmá tu sesión con el pago.",
+  },
+  {
+    icon: MessagesSquare,
+    title: "Primera sesión",
+    desc: "Conversamos sobre lo que te trae a terapia y definimos los objetivos.",
+  },
+  {
+    icon: TrendingUp,
+    title: "Plan terapéutico",
+    desc: "Avanzamos con sesiones periódicas, ajustando el enfoque cuando haga falta.",
+  },
+];
 
-    <div className="glass-strong relative w-[240px] h-[300px] sm:w-[280px] sm:h-[350px] md:w-[320px] md:h-[400px] rounded-[2.5rem] overflow-hidden animate-[float_6s_ease-in-out_infinite] flex flex-col items-center justify-center gap-5 px-6">
-      <Logo className="w-20 h-20 md:w-24 md:h-24 rounded-[1.75rem]" textClassName="text-4xl md:text-5xl" />
-      <div className="text-center">
-        <p className="text-slate-800 dark:text-slate-100 font-extrabold text-xl leading-tight">
-          Psicoconsultores
-        </p>
-        <p className="text-slate-500 dark:text-slate-400 text-sm">Psicólogos</p>
+const HeroAvatar = () => {
+  const [indice, setIndice] = useState(0);
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setVisible(false);
+      setTimeout(() => {
+        setIndice((i) => (i + 1) % pasos.length);
+        setVisible(true);
+      }, 400);
+    }, 3500);
+    return () => clearInterval(id);
+  }, []);
+
+  const paso = pasos[indice];
+
+  return (
+    <div className="relative w-full flex items-center justify-center">
+      <div className="absolute w-[280px] h-[280px] sm:w-[340px] sm:h-[340px] md:w-[400px] md:h-[400px] rounded-full bg-gradient-to-br from-lavender-200/60 to-sage-200/60 dark:from-lavender-500/10 dark:to-sage-500/10 blur-2xl -z-10" />
+
+      <div className="glass-strong relative w-[240px] h-[300px] sm:w-[280px] sm:h-[350px] md:w-[320px] md:h-[400px] rounded-[2.5rem] overflow-hidden animate-[float_6s_ease-in-out_infinite] flex flex-col items-center justify-center gap-5 px-6">
+        <div
+          className={`flex flex-col items-center gap-5 transition-opacity duration-400 ease-out ${
+            visible ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          {paso.esLogo ? (
+            <>
+              <Logo className="w-20 h-20 md:w-24 md:h-24 rounded-[1.75rem]" textClassName="text-4xl md:text-5xl" />
+              <div className="text-center">
+                <p className="text-slate-800 dark:text-slate-100 font-extrabold text-xl leading-tight">
+                  Psicoconsultores
+                </p>
+                <p className="text-slate-500 dark:text-slate-400 text-sm">Psicólogos</p>
+              </div>
+            </>
+          ) : (
+            <>
+              <span className="w-20 h-20 md:w-24 md:h-24 rounded-[1.75rem] bg-gradient-to-br from-lavender-400 to-sage-400 text-white flex items-center justify-center shadow-lg shadow-lavender-500/25">
+                <paso.icon className="w-9 h-9 md:w-10 md:h-10" />
+              </span>
+              <div className="text-center px-2">
+                <p className="text-slate-800 dark:text-slate-100 font-extrabold text-lg leading-tight mb-1.5">
+                  {paso.title}
+                </p>
+                <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">{paso.desc}</p>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+
+      <div className="glass absolute -bottom-4 -left-2 sm:left-4 md:-left-6 rounded-2xl px-4 py-3 flex items-center gap-2.5 shadow-lg">
+        <span className="w-9 h-9 rounded-full bg-sage-100 dark:bg-sage-500/20 text-sage-600 dark:text-sage-300 flex items-center justify-center shrink-0">
+          <ShieldCheck className="w-5 h-5" />
+        </span>
+        <div className="leading-tight">
+          <p className="text-xs font-bold text-slate-800 dark:text-slate-100">100% confidencial</p>
+          <p className="text-[11px] text-slate-500 dark:text-slate-400">Secreto profesional</p>
+        </div>
       </div>
     </div>
-
-    <div className="glass absolute -bottom-4 -left-2 sm:left-4 md:-left-6 rounded-2xl px-4 py-3 flex items-center gap-2.5 shadow-lg">
-      <span className="w-9 h-9 rounded-full bg-sage-100 dark:bg-sage-500/20 text-sage-600 dark:text-sage-300 flex items-center justify-center shrink-0">
-        <ShieldCheck className="w-5 h-5" />
-      </span>
-      <div className="leading-tight">
-        <p className="text-xs font-bold text-slate-800 dark:text-slate-100">100% confidencial</p>
-        <p className="text-[11px] text-slate-500 dark:text-slate-400">Secreto profesional</p>
-      </div>
-    </div>
-  </div>
-);
+  );
+};
 
 const Hero = () => {
   return (
