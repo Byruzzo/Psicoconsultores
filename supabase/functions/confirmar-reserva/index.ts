@@ -1,7 +1,8 @@
 // Supabase Edge Function PUBLICA: paso 4 del wizard, después de volver del
-// pago. Solo si la reserva ya quedó "confirmada" por el webhook de Mercado
-// Pago se guardan nombre/email y se crea el evento en el Google Calendar de
-// Carla con Meet, invitando al paciente.
+// pago. El email ya se guardó en el paso 3 (Flow lo exige para crear la
+// orden) -- acá solo falta el nombre. Solo si la reserva ya quedó
+// "confirmada" por el webhook de Flow se crea el evento en el Google
+// Calendar de Carla con Meet, invitando al paciente.
 //
 // Secretos requeridos: GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REFRESH_TOKEN
 // (SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY los inyecta Supabase automaticamente)
@@ -22,9 +23,6 @@ const jsonResponse = (body: unknown, status: number) =>
     headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
   });
 
-const esEmailValido = (email: string) =>
-  typeof email === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.length <= 150;
-
 const sanitize = (str: unknown, maxLen = 150) =>
   String(str ?? "")
     .replace(/<[^>]*>/g, "")
@@ -39,11 +37,10 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") return jsonResponse({ error: "Method not allowed" }, 405);
 
   try {
-    const { reservaId, nombre, email } = await req.json();
+    const { reservaId, nombre } = await req.json();
     const nombreLimpio = sanitize(nombre, 100);
-    const emailLimpio = sanitize(email, 150);
-    if (!reservaId || !nombreLimpio || !esEmailValido(emailLimpio)) {
-      return jsonResponse({ error: "Faltan datos o el correo no es válido" }, 400);
+    if (!reservaId || !nombreLimpio) {
+      return jsonResponse({ error: "Falta el nombre" }, 400);
     }
 
     const supabase = createClient(
@@ -51,7 +48,7 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
-    // El webhook de MP puede tardar unos segundos en llegar: reintenta
+    // El webhook de Flow puede tardar unos segundos en llegar: reintenta
     // brevemente antes de rendirse.
     let reserva = null;
     for (let intento = 0; intento < 6; intento++) {
@@ -69,6 +66,9 @@ Deno.serve(async (req) => {
     if (reserva.estado !== "confirmada") {
       return jsonResponse({ error: "El pago todavía no se confirma, intenta en unos segundos." }, 202);
     }
+    if (!reserva.email) {
+      return jsonResponse({ error: "Falta el correo de la reserva" }, 400);
+    }
 
     if (!reserva.calendar_event_id) {
       const { eventId, meetLink } = await crearEventoConMeet({
@@ -76,16 +76,16 @@ Deno.serve(async (req) => {
         description: `Motivo de consulta: ${reserva.motivo}`,
         startISO: reserva.inicio,
         endISO: reserva.fin,
-        attendeeEmail: emailLimpio,
+        attendeeEmail: reserva.email,
       });
       await supabase
         .from("reservas")
-        .update({ nombre: nombreLimpio, email: emailLimpio, calendar_event_id: eventId })
+        .update({ nombre: nombreLimpio, calendar_event_id: eventId })
         .eq("id", reservaId);
-      return jsonResponse({ ok: true, meetLink, inicio: reserva.inicio }, 200);
+      return jsonResponse({ ok: true, meetLink, inicio: reserva.inicio, email: reserva.email }, 200);
     }
 
-    return jsonResponse({ ok: true, inicio: reserva.inicio }, 200);
+    return jsonResponse({ ok: true, inicio: reserva.inicio, email: reserva.email }, 200);
   } catch (err) {
     console.error(err);
     return jsonResponse({ error: "No se pudo confirmar la reserva" }, 500);

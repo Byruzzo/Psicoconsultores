@@ -45,6 +45,7 @@ const formatearHora = (horarioISO) =>
     timeZone: "America/Santiago",
     hour: "2-digit",
     minute: "2-digit",
+    hour12: false,
   });
 
 const PasoHeader = ({ paso }) => {
@@ -102,24 +103,17 @@ const Reservar = () => {
   const [errorConfirmar, setErrorConfirmar] = useState("");
   const [resultado, setResultado] = useState(null); // { meetLink }
 
-  // Al volver de Mercado Pago, la URL trae #reservar?reserva=...&pago=ok|error|pendiente
+  // Al volver de Flow, la URL trae #reservar?reserva=... (Flow no manda el
+  // resultado en la url, el paso 4 consulta el estado real de la reserva).
   useEffect(() => {
     const hash = window.location.hash;
     const qIndex = hash.indexOf("?");
     if (qIndex === -1) return;
     const params = new URLSearchParams(hash.slice(qIndex + 1));
     const reserva = params.get("reserva");
-    const estadoPago = params.get("pago");
-    if (reserva && estadoPago === "ok") {
+    if (reserva) {
       setReservaId(reserva);
       setPaso(4);
-    } else if (reserva && (estadoPago === "error" || estadoPago === "pendiente")) {
-      setErrorPago(
-        estadoPago === "error"
-          ? "El pago no se completó. Podés intentarlo de nuevo."
-          : "Tu pago está pendiente de confirmación.",
-      );
-      setPaso(3);
     }
   }, []);
 
@@ -144,17 +138,21 @@ const Reservar = () => {
 
   const irAPagar = async () => {
     if (!FUNCTIONS_URL || !horario) return;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setErrorPago("Ingresá un correo válido para continuar.");
+      return;
+    }
     setCargandoPago(true);
     setErrorPago("");
     try {
-      const resp = await fetch(`${FUNCTIONS_URL}/crear-preferencia`, {
+      const resp = await fetch(`${FUNCTIONS_URL}/crear-pago`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ motivo: motivo.label, inicio: horario.inicio, fin: horario.fin }),
+        body: JSON.stringify({ motivo: motivo.label, inicio: horario.inicio, fin: horario.fin, email }),
       });
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.error || "No se pudo iniciar el pago");
-      window.location.href = data.initPoint;
+      window.location.href = data.redirectUrl;
     } catch (err) {
       setErrorPago(err.message || "No se pudo iniciar el pago. Intenta de nuevo.");
       setCargandoPago(false);
@@ -170,7 +168,7 @@ const Reservar = () => {
       const resp = await fetch(`${FUNCTIONS_URL}/confirmar-reserva`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reservaId, nombre, email }),
+        body: JSON.stringify({ reservaId, nombre }),
       });
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.error || "No se pudo confirmar la reserva");
@@ -359,6 +357,23 @@ const Reservar = () => {
                 </div>
               </div>
 
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 ml-1">
+                  Correo electrónico
+                </label>
+                <input
+                  type="email"
+                  className={inputClass}
+                  placeholder="tucorreo@mail.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+                <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 ml-1">
+                  Flow lo necesita para procesar el pago, y ahí te va a llegar el link de Meet.
+                </p>
+              </div>
+
               {errorPago && (
                 <div className="flex items-center gap-2 text-red-500 text-sm font-medium mb-4">
                   <AlertCircle className="w-4 h-4 shrink-0" /> {errorPago}
@@ -375,12 +390,12 @@ const Reservar = () => {
                 </button>
                 <button
                   onClick={irAPagar}
-                  disabled={cargandoPago}
+                  disabled={cargandoPago || !email}
                   className="flex-1 flex items-center justify-center gap-2 py-4 rounded-2xl font-bold bg-gradient-to-r from-lavender-500 to-lavender-400 text-white shadow-lg shadow-lavender-500/25 disabled:opacity-60 transition-all"
                 >
                   {cargandoPago ? (
                     <>
-                      <Loader2 className="w-4 h-4 animate-spin" /> Redirigiendo a Mercado Pago...
+                      <Loader2 className="w-4 h-4 animate-spin" /> Redirigiendo a Flow...
                     </>
                   ) : (
                     <>
@@ -390,7 +405,7 @@ const Reservar = () => {
                 </button>
               </div>
               <p className="text-center text-slate-400 dark:text-slate-500 text-xs mt-4">
-                Vas a pagar en el sitio seguro de Mercado Pago y después volvés acá para confirmar.
+                Vas a pagar en el sitio seguro de Flow y después volvés acá para confirmar.
               </p>
             </div>
           )}
@@ -407,7 +422,7 @@ const Reservar = () => {
                     ¡Hora confirmada!
                   </h3>
                   <p className="text-slate-600 dark:text-slate-400 max-w-sm mx-auto">
-                    Te mandamos la invitación con el link de Google Meet a {email}.
+                    Te mandamos la invitación con el link de Google Meet a {resultado.email || email}.
                   </p>
                   {resultado.meetLink && (
                     <a
@@ -441,22 +456,9 @@ const Reservar = () => {
                         required
                       />
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 ml-1">
-                        Correo electrónico
-                      </label>
-                      <input
-                        type="email"
-                        className={inputClass}
-                        placeholder="tucorreo@mail.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                      />
-                      <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 ml-1">
-                        Ahí te va a llegar el link de Google Meet.
-                      </p>
-                    </div>
+                    <p className="text-xs text-slate-400 dark:text-slate-500 -mt-2 ml-1">
+                      Te vamos a enviar la invitación por correo al que usaste para pagar.
+                    </p>
                     <label className="flex items-start gap-2.5 text-sm text-slate-600 dark:text-slate-400">
                       <input
                         type="checkbox"

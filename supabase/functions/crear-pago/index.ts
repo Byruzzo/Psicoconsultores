@@ -1,13 +1,15 @@
 // Supabase Edge Function PUBLICA: el paciente ya eligió motivo y horario
-// (pasos 1 y 2 del wizard). Acá se crea la reserva en estado "pendiente" y
-// la preferencia de pago de Mercado Pago (Checkout Pro), y se devuelve el
-// link al que hay que redirigir al navegador para pagar.
+// (pasos 1 y 2 del wizard) y ahora su correo (paso 3 — Flow lo exige para
+// crear la orden). Acá se crea la reserva en estado "pendiente" y la orden
+// de pago en Flow, y se devuelve el link al que hay que redirigir el
+// navegador para pagar.
 //
-// Secretos requeridos: MP_ACCESS_TOKEN
+// Secretos requeridos: FLOW_API_KEY, FLOW_SECRET_KEY (FLOW_BASE_URL opcional)
 // (SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY los inyecta Supabase automaticamente)
-// Deploy: supabase functions deploy crear-preferencia --no-verify-jwt
+// Deploy: supabase functions deploy crear-pago --no-verify-jwt
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { crearOrdenDePago } from "../_shared/flow.ts";
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -25,7 +27,10 @@ const PRECIO_SESION_CLP = 25000;
 const SITE_URL = "https://psicoconsultores.vercel.app"; // TODO: actualizar si cambia el dominio
 const FUNCTIONS_URL = Deno.env.get("SUPABASE_URL") + "/functions/v1";
 
-const sanitize = (str: unknown, maxLen = 100) =>
+const esEmailValido = (email: unknown) =>
+  typeof email === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.length <= 150;
+
+const sanitize = (str: unknown, maxLen = 150) =>
   String(str ?? "")
     .replace(/<[^>]*>/g, "")
     .replace(/[<>"'`]/g, "")
@@ -37,10 +42,14 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") return jsonResponse({ error: "Method not allowed" }, 405);
 
   try {
-    const { motivo, inicio, fin } = await req.json();
+    const { motivo, inicio, fin, email } = await req.json();
     const motivoLimpio = sanitize(motivo, 100);
+    const emailLimpio = sanitize(email, 150);
     if (!motivoLimpio || !inicio || !fin) {
       return jsonResponse({ error: "Faltan datos (motivo, inicio, fin)" }, 400);
+    }
+    if (!esEmailValido(emailLimpio)) {
+      return jsonResponse({ error: "Correo inválido" }, 400);
     }
     const inicioDate = new Date(inicio);
     const finDate = new Date(fin);
@@ -71,13 +80,10 @@ Deno.serve(async (req) => {
 
     const { data: reserva, error: insertError } = await supabase
       .from("reservas")
-      .insert([{ motivo: motivoLimpio, inicio: inicioDate.toISOString(), fin: finDate.toISOString() }])
+      .insert([{ motivo: motivoLimpio, email: emailLimpio, inicio: inicioDate.toISOString(), fin: finDate.toISOString() }])
       .select()
       .single();
     if (insertError) throw insertError;
-
-    const mpAccessToken = Deno.env.get("MP_ACCESS_TOKEN");
-    if (!mpAccessToken) throw new Error("MP_ACCESS_TOKEN no configurado");
 
     const fechaLegible = inicioDate.toLocaleString("es-CL", {
       timeZone: "America/Santiago",
@@ -85,39 +91,18 @@ Deno.serve(async (req) => {
       timeStyle: "short",
     });
 
-    const prefResp = await fetch("https://api.mercadopago.com/checkout/preferences", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${mpAccessToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        items: [
-          {
-            title: `Sesión de psicoterapia — ${fechaLegible}`,
-            quantity: 1,
-            unit_price: PRECIO_SESION_CLP,
-            currency_id: "CLP",
-          },
-        ],
-        external_reference: reserva.id,
-        notification_url: `${FUNCTIONS_URL}/webhook-mp`,
-        back_urls: {
-          success: `${SITE_URL}/#reservar?reserva=${reserva.id}&pago=ok`,
-          failure: `${SITE_URL}/#reservar?reserva=${reserva.id}&pago=error`,
-          pending: `${SITE_URL}/#reservar?reserva=${reserva.id}&pago=pendiente`,
-        },
-        auto_return: "approved",
-      }),
+    const { token, redirectUrl } = await crearOrdenDePago({
+      commerceOrder: reserva.id,
+      subject: `Sesión de psicoterapia — ${fechaLegible}`,
+      amount: PRECIO_SESION_CLP,
+      email: emailLimpio,
+      urlConfirmation: `${FUNCTIONS_URL}/webhook-flow`,
+      urlReturn: `${SITE_URL}/#reservar?reserva=${reserva.id}`,
     });
-    if (!prefResp.ok) {
-      throw new Error(`Mercado Pago rechazó la preferencia: ${prefResp.status} ${await prefResp.text()}`);
-    }
-    const pref = await prefResp.json();
 
-    await supabase.from("reservas").update({ mp_preference_id: pref.id }).eq("id", reserva.id);
+    await supabase.from("reservas").update({ flow_token: token }).eq("id", reserva.id);
 
-    return jsonResponse({ reservaId: reserva.id, initPoint: pref.init_point }, 200);
+    return jsonResponse({ reservaId: reserva.id, redirectUrl }, 200);
   } catch (err) {
     console.error(err);
     return jsonResponse({ error: "No se pudo iniciar el pago" }, 500);

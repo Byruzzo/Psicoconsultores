@@ -17,6 +17,9 @@ dist-ssr
 .env.local
 .env.production
 
+# Metadata local del Supabase CLI (vinculación del proyecto, versiones, etc.)
+supabase/.temp
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
