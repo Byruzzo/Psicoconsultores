@@ -6,7 +6,8 @@ const RUT = "19.184.909-4";
 const CODIGO_VALIDACION = "POBU8Lqgh";
 
 const RNPI_URL = "https://rnpi.superdesalud.gob.cl/";
-const CERTIFICADO_URL = "/certificado-superintendencia.pdf";
+const CERTIFICADO_IMG = "/certificado-superintendencia.png";
+const CERTIFICADO_PDF = "/certificado-superintendencia.pdf";
 
 const CertificadoModal = ({ onClose }) => {
   useEffect(() => {
@@ -34,11 +35,11 @@ const CertificadoModal = ({ onClose }) => {
           </p>
           <div className="flex items-center gap-2">
             <a
-              href={CERTIFICADO_URL}
+              href={CERTIFICADO_PDF}
               download
               className="flex items-center gap-1.5 text-xs font-semibold text-lavender-600 dark:text-lavender-300 hover:underline px-2 py-1"
             >
-              <Download className="w-3.5 h-3.5" /> Descargar
+              <Download className="w-3.5 h-3.5" /> Descargar PDF
             </a>
             <button
               onClick={onClose}
@@ -49,12 +50,13 @@ const CertificadoModal = ({ onClose }) => {
             </button>
           </div>
         </div>
-        <iframe
-          src={CERTIFICADO_URL}
-          title="Certificado de Inscripción en el Registro Nacional de Prestadores Individuales de Salud"
-          className="flex-1 w-full bg-white"
-          style={{ border: 0 }}
-        />
+        <div className="flex-1 overflow-y-auto bg-white dark:bg-slate-900 p-2 sm:p-4">
+          <img
+            src={CERTIFICADO_IMG}
+            alt="Certificado de Inscripción en el Registro Nacional de Prestadores Individuales de Salud"
+            className="w-full h-auto rounded-lg"
+          />
+        </div>
       </div>
     </div>
   );
