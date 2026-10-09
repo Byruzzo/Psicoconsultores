@@ -5,14 +5,14 @@ const planes = [
   {
     title: "Sesión Individual",
     price: "$25.000",
-    desc: "Sesión de 45 minutos, online o presencial.",
+    desc: "Sesión de 45 minutos, online.",
     features: ["Boleta reembolsable en Isapre", "Agenda flexible", "Seguimiento entre sesiones"],
     highlight: false,
   },
   {
     title: "Terapia de Pareja",
     price: "$XX.000",
-    desc: "Sesión de 60 minutos, online o presencial.",
+    desc: "Sesión de 60 minutos, online.",
     features: ["Boleta reembolsable en Isapre", "Espacio neutral y guiado", "Herramientas prácticas"],
     highlight: true,
   },

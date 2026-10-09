@@ -1,20 +1,20 @@
 import React from "react";
-import { GraduationCap, BadgeCheck, Clock } from "lucide-react";
+import { GraduationCap, BookOpen, Clock } from "lucide-react";
 
 const credenciales = [
   {
     icon: GraduationCap,
-    label: "Universidad Placeholder",
-    sub: "Lic. en Psicología",
+    label: "Universidad Central de Chile",
+    sub: "Lic. en Psicología (2019)",
   },
   {
-    icon: BadgeCheck,
-    label: "Registro N° 000000",
-    sub: "Superintendencia de Salud",
+    icon: BookOpen,
+    label: "Diplomado Psicopatología Infanto Juvenil",
+    sub: "Universidad de Chile",
   },
   {
     icon: Clock,
-    label: "+X años",
+    label: "+5 años",
     sub: "de experiencia clínica",
   },
 ];
@@ -26,12 +26,12 @@ const SobreMi = () => {
         <div className="grid lg:grid-cols-[0.85fr_1.15fr] gap-10 md:gap-16 items-center">
           <div className="relative mx-auto lg:mx-0 w-[220px] sm:w-[260px]">
             <div className="absolute w-[240px] h-[240px] sm:w-[280px] sm:h-[280px] rounded-full bg-sage-200/50 dark:bg-sage-500/10 blur-2xl -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
-            <div className="glass-strong aspect-square rounded-[2.5rem] flex items-center justify-center overflow-hidden">
-              <div className="w-full h-full bg-gradient-to-br from-sage-300 via-sage-400 to-lavender-300 dark:from-sage-600 dark:via-sage-500 dark:to-lavender-600 flex items-center justify-center">
-                <span className="text-white text-6xl font-extrabold opacity-90 select-none">
-                  CR
-                </span>
-              </div>
+            <div className="glass-strong aspect-square rounded-[2.5rem] overflow-hidden">
+              <img
+                src="/carla.jpg"
+                alt="Carla Ruz Pardo, Psicóloga Clínica"
+                className="w-full h-full object-cover object-top"
+              />
             </div>
           </div>
 
@@ -40,15 +40,17 @@ const SobreMi = () => {
               Sobre mí
             </span>
             <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white leading-tight">
-              Carla Ruz, Psicóloga
+              Carla Ruz Pardo, Psicóloga Clínica
             </h2>
             <p className="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">
-              Texto de biografía placeholder. Aquí va una presentación breve
-              sobre el enfoque terapéutico, la trayectoria profesional y la
-              forma de trabajo con los pacientes. Se puede mencionar el
-              modelo teórico utilizado, la población con la que se trabaja
-              (adultos, adolescentes) y qué hace distinto el acompañamiento
-              que ofrece.
+              Soy psicóloga clínica con 5 años de experiencia en atención a
+              adultos, tanto en salud pública como en mutualidad. He
+              trabajado en ACHS, en el programa PAEC de la Red de Salud UC
+              Christus y en dispositivos de salud mental de la SEREMI de
+              Salud, acompañando procesos de ansiedad, duelo, estrés laboral
+              y desgaste profesional. Mi enfoque es cercano y breve,
+              centrado en tus objetivos y en construir contigo herramientas
+              concretas para tu día a día.
             </p>
 
             <div className="grid sm:grid-cols-3 gap-4 pt-2">

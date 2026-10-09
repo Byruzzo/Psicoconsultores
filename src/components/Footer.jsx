@@ -1,5 +1,5 @@
 import React from "react";
-import { Mail, MapPin, Instagram, Linkedin } from "lucide-react";
+import { Mail, Globe, Instagram, Linkedin } from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -23,7 +23,7 @@ const Footer = () => {
               </span>
             </div>
             <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
-              Psicoterapia individual y de pareja, online y presencial, con un
+              Psicoterapia individual y de pareja, 100% online, con un
               enfoque cercano y profesional.
             </p>
           </div>
@@ -72,11 +72,11 @@ const Footer = () => {
             <ul className="space-y-3 text-sm text-slate-500 dark:text-slate-400 mb-6">
               <li className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-lavender-500" />
-                contacto@placeholder.cl
+                carlaruzpardo@gmail.com
               </li>
               <li className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-lavender-500" />
-                Santiago, Chile
+                <Globe className="w-4 h-4 text-lavender-500" />
+                Atención online · Chile
               </li>
             </ul>
             <div className="flex gap-4">

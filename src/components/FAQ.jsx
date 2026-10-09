@@ -25,9 +25,9 @@ const FAQ = () => {
         "Las sesiones individuales duran 45 minutos y las de pareja 60 minutos. La frecuencia habitual es semanal, aunque se puede ajustar según el proceso y la disponibilidad.",
     },
     {
-      question: "¿La atención online es igual de efectiva que la presencial?",
+      question: "¿Qué tan efectiva es la terapia online?",
       answer:
-        "Sí. La evidencia muestra que la telepsicología tiene resultados comparables a la atención presencial para la mayoría de los procesos terapéuticos, siempre que se cuente con privacidad y buena conexión.",
+        "La evidencia muestra que la telepsicología tiene resultados comparables a la atención presencial para la mayoría de los procesos terapéuticos, siempre que se cuente con privacidad y buena conexión.",
     },
     {
       question: "¿Puedo usar mi Isapre o seguro complementario?",

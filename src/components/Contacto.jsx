@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Mail, Phone, MapPin, Send, Loader2 } from "lucide-react";
+import { Mail, Phone, Globe, Send, Loader2 } from "lucide-react";
 import { supabase } from "../lib/supabase";
 
-const WHATSAPP_NUMBER = "56900000000"; // Placeholder — reemplazar por el número real de Carla
+const WHATSAPP_NUMBER = "56930010448"; // +56 9 3001 0448
 
 const sanitize = (str, maxLen = 300) => {
   if (!str) return "";
@@ -79,7 +79,7 @@ const Contacto = () => {
               </span>
               <div>
                 <p className="font-bold text-slate-800 dark:text-slate-100 text-sm">Correo</p>
-                <p className="text-sm text-slate-500 dark:text-slate-400">contacto@placeholder.cl</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">carlaruzpardo@gmail.com</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
@@ -88,16 +88,16 @@ const Contacto = () => {
               </span>
               <div>
                 <p className="font-bold text-slate-800 dark:text-slate-100 text-sm">WhatsApp</p>
-                <p className="text-sm text-slate-500 dark:text-slate-400">+56 9 0000 0000</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">+56 9 3001 0448</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
               <span className="w-10 h-10 rounded-full bg-lavender-100 dark:bg-lavender-500/20 text-lavender-600 dark:text-lavender-300 flex items-center justify-center shrink-0">
-                <MapPin className="w-5 h-5" />
+                <Globe className="w-5 h-5" />
               </span>
               <div>
-                <p className="font-bold text-slate-800 dark:text-slate-100 text-sm">Ubicación</p>
-                <p className="text-sm text-slate-500 dark:text-slate-400">Dirección placeholder, Santiago</p>
+                <p className="font-bold text-slate-800 dark:text-slate-100 text-sm">Cobertura</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">Atención online para todo Chile</p>
               </div>
             </div>
           </div>

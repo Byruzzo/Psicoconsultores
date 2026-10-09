@@ -1,29 +1,11 @@
 import React from "react";
-import { Video, MapPin, Check } from "lucide-react";
+import { Video, Check } from "lucide-react";
 
-const modalidades = [
-  {
-    icon: Video,
-    title: "Terapia Online",
-    accent: "lavender",
-    desc: "Sesiones por videollamada desde donde estés, con la misma calidad que una sesión presencial.",
-    bullets: [
-      "Plataforma segura y confidencial",
-      "Sin traslados, mismo horario",
-      "Ideal para agendas ocupadas",
-    ],
-  },
-  {
-    icon: MapPin,
-    title: "Terapia Presencial",
-    accent: "sage",
-    desc: "Un espacio cómodo y privado para quienes prefieren la atención cara a cara.",
-    bullets: [
-      "Consulta particular (dirección placeholder)",
-      "Ambiente cálido y confidencial",
-      "Fácil acceso y estacionamiento",
-    ],
-  },
+const bullets = [
+  "Plataforma segura y confidencial",
+  "Sin traslados, desde cualquier lugar de Chile",
+  "Ideal para agendas ocupadas",
+  "Misma calidad que una sesión presencial",
 ];
 
 const Modalidades = () => {
@@ -37,40 +19,30 @@ const Modalidades = () => {
             Cómo atenderte
           </span>
           <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mb-4">
-            Elige la modalidad que prefieras
+            Atención 100% online
           </h2>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6 md:gap-8">
-          {modalidades.map(({ icon: Icon, title, desc, bullets, accent }) => (
-            <div key={title} className="glass-strong rounded-[2rem] p-8 md:p-10">
-              <span
-                className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 text-white shadow-lg ${
-                  accent === "lavender"
-                    ? "bg-gradient-to-br from-lavender-500 to-lavender-400 shadow-lavender-500/30"
-                    : "bg-gradient-to-br from-sage-500 to-sage-400 shadow-sage-500/30"
-                }`}
-              >
-                <Icon className="w-7 h-7" />
-              </span>
-              <h3 className="text-2xl font-extrabold text-slate-900 dark:text-white mb-3">
-                {title}
-              </h3>
-              <p className="text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">{desc}</p>
-              <ul className="space-y-3">
-                {bullets.map((b) => (
-                  <li key={b} className="flex items-start gap-2.5 text-sm text-slate-700 dark:text-slate-300">
-                    <Check
-                      className={`w-4 h-4 mt-0.5 shrink-0 ${
-                        accent === "lavender" ? "text-lavender-500" : "text-sage-500"
-                      }`}
-                    />
-                    {b}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+        <div className="glass-strong rounded-[2rem] p-8 md:p-10 grid sm:grid-cols-[auto_1fr] gap-8 items-center">
+          <span className="w-16 h-16 rounded-2xl flex items-center justify-center text-white shadow-lg bg-gradient-to-br from-lavender-500 to-lavender-400 shadow-lavender-500/30 mx-auto sm:mx-0">
+            <Video className="w-8 h-8" />
+          </span>
+          <div>
+            <h3 className="text-2xl font-extrabold text-slate-900 dark:text-white mb-2 text-center sm:text-left">
+              Terapia Online
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400 mb-5 leading-relaxed text-center sm:text-left">
+              Sesiones por videollamada desde donde estés, con la misma calidad que una sesión presencial.
+            </p>
+            <ul className="grid sm:grid-cols-2 gap-x-6 gap-y-3">
+              {bullets.map((b) => (
+                <li key={b} className="flex items-start gap-2.5 text-sm text-slate-700 dark:text-slate-300">
+                  <Check className="w-4 h-4 mt-0.5 shrink-0 text-lavender-500" />
+                  {b}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </section>
