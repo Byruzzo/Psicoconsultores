@@ -8,13 +8,11 @@ const GOOGLE_CALENDAR_EMBED_SRC = `${GOOGLE_CALENDAR_BOOKING_URL}?gv=true`;
 
 const CONTACT_EMAIL = "psiconsultoresruz@gmail.com";
 
-// Placeholders — reemplazar por los datos reales de la cuenta (Banco de
-// Chile, Cuenta FAN) una vez confirmados.
 const CUENTA = {
   banco: "Banco de Chile",
   tipo: "Cuenta FAN",
-  numero: "Pendiente",
-  rut: "Pendiente",
+  numero: "00-002-08262-82",
+  rut: "19.184.909-4",
   nombre: "Carla Ruz Pardo",
 };
 
