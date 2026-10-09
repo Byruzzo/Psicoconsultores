@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { supabase } from "../lib/supabase";
 
-const PRECIO_SESION = "$100"; // TODO: volver a "$25.000" después de probar el pago real
+const PRECIO_SESION = "$350"; // TODO: volver a "$25.000" después de probar el pago real
 const DURACION_TEXTO = "45 minutos";
 
 const MOTIVOS = [
