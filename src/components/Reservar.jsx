@@ -34,6 +34,9 @@ const MOTIVOS = [
 
 const FUNCTIONS_URL = supabase ? `${import.meta.env.VITE_SUPABASE_URL}/functions/v1` : null;
 
+const esEmailValido = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+const esTelefonoValido = (v) => /^(\+?56)?[0-9]{8,12}$/.test(v.replace(/[\s\-()]/g, ""));
+
 const formatearDia = (fechaISO) => {
   const d = new Date(`${fechaISO}T12:00:00`); // mediodía para evitar saltos de huso horario
   const texto = d.toLocaleDateString("es-CL", { weekday: "short", day: "numeric", month: "short" });
@@ -49,7 +52,7 @@ const formatearHora = (horarioISO) =>
   });
 
 const PasoHeader = ({ paso }) => {
-  const pasos = ["Motivo", "Horario", "Pago", "Contacto"];
+  const pasos = ["Motivo", "Horario", "Pago", "Confirmación"];
   return (
     <div className="flex items-center justify-center gap-2 mb-10 flex-wrap">
       {pasos.map((label, i) => {
@@ -97,14 +100,40 @@ const Reservar = () => {
   const [reservaId, setReservaId] = useState(null);
   const [errorPago, setErrorPago] = useState("");
   const [nombre, setNombre] = useState("");
+  const [telefono, setTelefono] = useState("");
   const [email, setEmail] = useState("");
   const [aceptaTerminos, setAceptaTerminos] = useState(false);
   const [confirmando, setConfirmando] = useState(false);
   const [errorConfirmar, setErrorConfirmar] = useState("");
-  const [resultado, setResultado] = useState(null); // { meetLink }
+  const [resultado, setResultado] = useState(null); // { meetLink, email, nombre }
+
+  const confirmarReserva = useCallback(
+    async (id) => {
+      if (!FUNCTIONS_URL || !id) return;
+      setConfirmando(true);
+      setErrorConfirmar("");
+      try {
+        const resp = await fetch(`${FUNCTIONS_URL}/confirmar-reserva`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ reservaId: id }),
+        });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.error || "No se pudo confirmar la reserva");
+        setResultado(data);
+      } catch (err) {
+        setErrorConfirmar(err.message || "No se pudo confirmar. Si ya pagaste, escribinos por correo.");
+      } finally {
+        setConfirmando(false);
+      }
+    },
+    [],
+  );
 
   // Al volver de Flow, la URL trae #reservar?reserva=... (Flow no manda el
-  // resultado en la url, el paso 4 consulta el estado real de la reserva).
+  // resultado en la url). El paso 4 es automático: confirma solo, sin
+  // pedirle nada más a la persona (nombre/teléfono/correo ya se guardaron
+  // en el paso 3, antes de pagar).
   useEffect(() => {
     const hash = window.location.hash;
     const qIndex = hash.indexOf("?");
@@ -114,8 +143,9 @@ const Reservar = () => {
     if (reserva) {
       setReservaId(reserva);
       setPaso(4);
+      confirmarReserva(reserva);
     }
-  }, []);
+  }, [confirmarReserva]);
 
   const cargarDisponibilidad = useCallback(async () => {
     if (!FUNCTIONS_URL) return;
@@ -138,8 +168,20 @@ const Reservar = () => {
 
   const irAPagar = async () => {
     if (!FUNCTIONS_URL || !horario) return;
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setErrorPago("Ingresá un correo válido para continuar.");
+    if (!nombre.trim() || nombre.trim().length < 2) {
+      setErrorPago("Ingresá tu nombre completo.");
+      return;
+    }
+    if (!esTelefonoValido(telefono)) {
+      setErrorPago("Ingresá un teléfono válido (ej: +56912345678).");
+      return;
+    }
+    if (!esEmailValido(email)) {
+      setErrorPago("Ingresá un correo válido.");
+      return;
+    }
+    if (!aceptaTerminos) {
+      setErrorPago("Tenés que aceptar el uso de tus datos para continuar.");
       return;
     }
     setCargandoPago(true);
@@ -148,7 +190,14 @@ const Reservar = () => {
       const resp = await fetch(`${FUNCTIONS_URL}/crear-pago`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ motivo: motivo.label, inicio: horario.inicio, fin: horario.fin, email }),
+        body: JSON.stringify({
+          motivo: motivo.label,
+          inicio: horario.inicio,
+          fin: horario.fin,
+          nombre,
+          telefono,
+          email,
+        }),
       });
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.error || "No se pudo iniciar el pago");
@@ -156,27 +205,6 @@ const Reservar = () => {
     } catch (err) {
       setErrorPago(err.message || "No se pudo iniciar el pago. Intenta de nuevo.");
       setCargandoPago(false);
-    }
-  };
-
-  const confirmarReserva = async (e) => {
-    e.preventDefault();
-    if (!FUNCTIONS_URL || !reservaId) return;
-    setConfirmando(true);
-    setErrorConfirmar("");
-    try {
-      const resp = await fetch(`${FUNCTIONS_URL}/confirmar-reserva`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reservaId, nombre }),
-      });
-      const data = await resp.json();
-      if (!resp.ok) throw new Error(data.error || "No se pudo confirmar la reserva");
-      setResultado(data);
-    } catch (err) {
-      setErrorConfirmar(err.message || "No se pudo confirmar. Si ya pagaste, escribinos por correo.");
-    } finally {
-      setConfirmando(false);
     }
   };
 
@@ -331,11 +359,11 @@ const Reservar = () => {
             </div>
           )}
 
-          {/* Paso 3: pago */}
+          {/* Paso 3: tus datos y pago */}
           {paso === 3 && (
             <div className="animate-[fadeIn_0.3s_ease-in-out]">
               <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-6">
-                Confirmá tu sesión con el pago
+                Tus datos y el pago
               </h3>
 
               <div className="glass rounded-2xl p-5 space-y-2 mb-6 text-sm">
@@ -357,21 +385,59 @@ const Reservar = () => {
                 </div>
               </div>
 
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 ml-1">
-                  Correo electrónico
-                </label>
-                <input
-                  type="email"
-                  className={inputClass}
-                  placeholder="tucorreo@mail.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-                <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 ml-1">
-                  Flow lo necesita para procesar el pago, y ahí te va a llegar el link de Meet.
+              <div className="space-y-4 mb-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 ml-1">
+                    Nombre completo
+                  </label>
+                  <input
+                    className={inputClass}
+                    placeholder="Tu nombre y apellido"
+                    value={nombre}
+                    onChange={(e) => setNombre(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 ml-1">
+                      Teléfono
+                    </label>
+                    <input
+                      type="tel"
+                      className={inputClass}
+                      placeholder="+56912345678"
+                      value={telefono}
+                      onChange={(e) => setTelefono(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 ml-1">
+                      Correo electrónico
+                    </label>
+                    <input
+                      type="email"
+                      className={inputClass}
+                      placeholder="tucorreo@mail.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+                <p className="text-xs text-slate-400 dark:text-slate-500 ml-1">
+                  Al correo te va a llegar el link de Meet apenas se confirme el pago.
                 </p>
+                <label className="flex items-start gap-2.5 text-sm text-slate-600 dark:text-slate-400">
+                  <input
+                    type="checkbox"
+                    checked={aceptaTerminos}
+                    onChange={(e) => setAceptaTerminos(e.target.checked)}
+                    className="mt-0.5"
+                  />
+                  Acepto que mis datos se usen para coordinar esta sesión.
+                </label>
               </div>
 
               {errorPago && (
@@ -390,7 +456,7 @@ const Reservar = () => {
                 </button>
                 <button
                   onClick={irAPagar}
-                  disabled={cargandoPago || !email}
+                  disabled={cargandoPago}
                   className="flex-1 flex items-center justify-center gap-2 py-4 rounded-2xl font-bold bg-gradient-to-r from-lavender-500 to-lavender-400 text-white shadow-lg shadow-lavender-500/25 disabled:opacity-60 transition-all"
                 >
                   {cargandoPago ? (
@@ -405,24 +471,24 @@ const Reservar = () => {
                 </button>
               </div>
               <p className="text-center text-slate-400 dark:text-slate-500 text-xs mt-4">
-                Vas a pagar en el sitio seguro de Flow y después volvés acá para confirmar.
+                Vas a pagar en el sitio seguro de Flow. Al volver, tu hora queda confirmada sola.
               </p>
             </div>
           )}
 
-          {/* Paso 4: contacto y confirmación */}
+          {/* Paso 4: confirmación automática */}
           {paso === 4 && (
-            <div className="animate-[fadeIn_0.3s_ease-in-out]">
+            <div className="animate-[fadeIn_0.3s_ease-in-out] text-center py-6">
               {resultado ? (
-                <div className="text-center py-6">
+                <>
                   <div className="w-16 h-16 mx-auto bg-sage-100 dark:bg-sage-500/20 rounded-full flex items-center justify-center text-sage-600 dark:text-sage-300 mb-5">
                     <CheckCircle2 className="w-9 h-9" />
                   </div>
                   <h3 className="text-xl font-extrabold text-slate-900 dark:text-white mb-2">
-                    ¡Hora confirmada!
+                    ¡Hora confirmada, {resultado.nombre?.split(" ")[0] || ""}!
                   </h3>
                   <p className="text-slate-600 dark:text-slate-400 max-w-sm mx-auto">
-                    Te mandamos la invitación con el link de Google Meet a {resultado.email || email}.
+                    Te mandamos la invitación con el link de Google Meet a {resultado.email}.
                   </p>
                   {resultado.meetLink && (
                     <a
@@ -434,62 +500,35 @@ const Reservar = () => {
                       <VideoIcon className="w-4 h-4" /> Ver link de Meet
                     </a>
                   )}
-                </div>
+                </>
+              ) : errorConfirmar ? (
+                <>
+                  <div className="w-16 h-16 mx-auto bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center text-red-500 mb-5">
+                    <AlertCircle className="w-9 h-9" />
+                  </div>
+                  <h3 className="text-xl font-extrabold text-slate-900 dark:text-white mb-2">
+                    No pudimos confirmar
+                  </h3>
+                  <p className="text-slate-600 dark:text-slate-400 max-w-sm mx-auto mb-5">{errorConfirmar}</p>
+                  {reservaId && (
+                    <button
+                      onClick={() => confirmarReserva(reservaId)}
+                      disabled={confirmando}
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-lavender-500 hover:bg-lavender-600 text-white font-bold text-sm transition-all disabled:opacity-60"
+                    >
+                      {confirmando ? <Loader2 className="w-4 h-4 animate-spin" /> : null} Intentar de nuevo
+                    </button>
+                  )}
+                </>
               ) : (
                 <>
-                  <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-1">
-                    ¡Ya casi terminas!
+                  <Loader2 className="w-9 h-9 animate-spin text-lavender-500 mx-auto mb-5" />
+                  <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">
+                    Confirmando tu sesión...
                   </h3>
-                  <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
-                    Tu pago quedó registrado. Dejanos tus datos para enviarte la invitación.
+                  <p className="text-sm text-slate-500 dark:text-slate-400">
+                    Estamos verificando tu pago y agendando el Meet. Esto toma unos segundos.
                   </p>
-                  <form onSubmit={confirmarReserva} className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 ml-1">
-                        Nombre
-                      </label>
-                      <input
-                        className={inputClass}
-                        placeholder="Tu nombre"
-                        value={nombre}
-                        onChange={(e) => setNombre(e.target.value)}
-                        required
-                      />
-                    </div>
-                    <p className="text-xs text-slate-400 dark:text-slate-500 -mt-2 ml-1">
-                      Te vamos a enviar la invitación por correo al que usaste para pagar.
-                    </p>
-                    <label className="flex items-start gap-2.5 text-sm text-slate-600 dark:text-slate-400">
-                      <input
-                        type="checkbox"
-                        checked={aceptaTerminos}
-                        onChange={(e) => setAceptaTerminos(e.target.checked)}
-                        required
-                        className="mt-0.5"
-                      />
-                      Acepto que mis datos se usen para coordinar esta sesión.
-                    </label>
-
-                    {errorConfirmar && (
-                      <div className="flex items-center gap-2 text-red-500 text-sm font-medium">
-                        <AlertCircle className="w-4 h-4 shrink-0" /> {errorConfirmar}
-                      </div>
-                    )}
-
-                    <button
-                      type="submit"
-                      disabled={confirmando || !aceptaTerminos}
-                      className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl font-bold bg-gradient-to-r from-lavender-500 to-lavender-400 text-white shadow-lg shadow-lavender-500/25 disabled:opacity-60 transition-all"
-                    >
-                      {confirmando ? (
-                        <>
-                          <Loader2 className="w-4 h-4 animate-spin" /> Confirmando...
-                        </>
-                      ) : (
-                        "Confirmar hora"
-                      )}
-                    </button>
-                  </form>
                 </>
               )}
             </div>

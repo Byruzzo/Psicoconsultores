@@ -1,8 +1,10 @@
 // Supabase Edge Function PUBLICA: el paciente ya eligió motivo y horario
-// (pasos 1 y 2 del wizard) y ahora su correo (paso 3 — Flow lo exige para
-// crear la orden). Acá se crea la reserva en estado "pendiente" y la orden
-// de pago en Flow, y se devuelve el link al que hay que redirigir el
-// navegador para pagar.
+// (pasos 1 y 2 del wizard) y ahora completó nombre, teléfono y correo
+// (paso 3 — Flow exige el correo para crear la orden, y pedimos nombre y
+// teléfono acá también para que el paso 4, después de pagar, sea 100%
+// automático y no haga falta volver a escribir nada). Acá se crea la
+// reserva en estado "pendiente" y la orden de pago en Flow, y se devuelve
+// el link al que hay que redirigir el navegador para pagar.
 //
 // Secretos requeridos: FLOW_API_KEY, FLOW_SECRET_KEY (FLOW_BASE_URL opcional)
 // (SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY los inyecta Supabase automaticamente)
@@ -30,6 +32,9 @@ const FUNCTIONS_URL = Deno.env.get("SUPABASE_URL") + "/functions/v1";
 const esEmailValido = (email: unknown) =>
   typeof email === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.length <= 150;
 
+const esTelefonoValido = (tel: unknown) =>
+  typeof tel === "string" && /^(\+?56)?[0-9]{8,12}$/.test(tel.replace(/[\s\-()]/g, ""));
+
 const sanitize = (str: unknown, maxLen = 150) =>
   String(str ?? "")
     .replace(/<[^>]*>/g, "")
@@ -42,11 +47,19 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") return jsonResponse({ error: "Method not allowed" }, 405);
 
   try {
-    const { motivo, inicio, fin, email } = await req.json();
+    const { motivo, inicio, fin, nombre, telefono, email } = await req.json();
     const motivoLimpio = sanitize(motivo, 100);
+    const nombreLimpio = sanitize(nombre, 100);
+    const telefonoLimpio = sanitize(telefono, 20);
     const emailLimpio = sanitize(email, 150);
     if (!motivoLimpio || !inicio || !fin) {
       return jsonResponse({ error: "Faltan datos (motivo, inicio, fin)" }, 400);
+    }
+    if (!nombreLimpio || nombreLimpio.length < 2) {
+      return jsonResponse({ error: "Ingresa tu nombre completo" }, 400);
+    }
+    if (!esTelefonoValido(telefonoLimpio)) {
+      return jsonResponse({ error: "Ingresa un teléfono válido (ej: +56912345678)" }, 400);
     }
     if (!esEmailValido(emailLimpio)) {
       return jsonResponse({ error: "Correo inválido" }, 400);
@@ -80,7 +93,16 @@ Deno.serve(async (req) => {
 
     const { data: reserva, error: insertError } = await supabase
       .from("reservas")
-      .insert([{ motivo: motivoLimpio, email: emailLimpio, inicio: inicioDate.toISOString(), fin: finDate.toISOString() }])
+      .insert([
+        {
+          motivo: motivoLimpio,
+          nombre: nombreLimpio,
+          telefono: telefonoLimpio,
+          email: emailLimpio,
+          inicio: inicioDate.toISOString(),
+          fin: finDate.toISOString(),
+        },
+      ])
       .select()
       .single();
     if (insertError) throw insertError;
