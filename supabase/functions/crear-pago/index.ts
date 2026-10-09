@@ -25,7 +25,7 @@ const jsonResponse = (body: unknown, status: number) =>
     headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
   });
 
-const PRECIO_SESION_CLP = 25000;
+const PRECIO_SESION_CLP = 100; // TODO: volver a 25000 después de probar el pago real
 const SITE_URL = "https://psicoconsultores.vercel.app"; // TODO: actualizar si cambia el dominio
 const FUNCTIONS_URL = Deno.env.get("SUPABASE_URL") + "/functions/v1";
 
