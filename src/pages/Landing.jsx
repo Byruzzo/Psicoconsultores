@@ -3,7 +3,6 @@ import NavBar from "../components/NavBar";
 import Hero from "../components/Hero";
 import SobreMi from "../components/SobreMi";
 import Capacitacion from "../components/Capacitacion";
-import RegistroOficial from "../components/RegistroOficial";
 import Especialidades from "../components/Especialidades";
 import Modalidades from "../components/Modalidades";
 import Proceso from "../components/Proceso";
@@ -21,7 +20,6 @@ const Landing = () => {
       <Hero />
       <SobreMi />
       <Capacitacion />
-      <RegistroOficial />
       <Especialidades />
       <Modalidades />
       <Proceso />
