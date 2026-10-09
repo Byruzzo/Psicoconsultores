@@ -16,10 +16,7 @@ const CUENTA = {
   nombre: "Carla Ruz Pardo",
 };
 
-const planes = [
-  { title: "Sesión Individual", price: "$25.000" },
-  { title: "Terapia de Pareja", price: "$XX.000" },
-];
+const SESION = { title: "Sesión Individual", price: "$25.000" };
 
 const Reservar = () => {
   return (
@@ -75,13 +72,9 @@ const Reservar = () => {
             <h3 className="text-lg font-extrabold text-slate-900 dark:text-white">Confirmá tu sesión con el pago</h3>
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-3 mb-6">
-            {planes.map((plan) => (
-              <div key={plan.title} className="glass rounded-2xl p-4 flex items-center justify-between">
-                <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">{plan.title}</span>
-                <span className="text-lg font-extrabold text-slate-900 dark:text-white">{plan.price}</span>
-              </div>
-            ))}
+          <div className="glass rounded-2xl p-4 flex items-center justify-between mb-6">
+            <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">{SESION.title}</span>
+            <span className="text-lg font-extrabold text-slate-900 dark:text-white">{SESION.price}</span>
           </div>
 
           <div className="glass rounded-2xl p-6">

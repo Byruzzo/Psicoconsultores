@@ -1,5 +1,5 @@
-import React from "react";
-import { ShieldCheck, ExternalLink, FileCheck2 } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { ShieldCheck, ExternalLink, FileCheck2, X, Download } from "lucide-react";
 
 const N_REGISTRO = "656686";
 const RUT = "19.184.909-4";
@@ -8,7 +8,61 @@ const CODIGO_VALIDACION = "POBU8Lqgh";
 const RNPI_URL = "https://rnpi.superdesalud.gob.cl/";
 const CERTIFICADO_URL = "/certificado-superintendencia.pdf";
 
+const CertificadoModal = ({ onClose }) => {
+  useEffect(() => {
+    const onKeyDown = (e) => e.key === "Escape" && onClose();
+    document.addEventListener("keydown", onKeyDown);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [onClose]);
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      <div
+        className="glass-strong rounded-[1.5rem] w-full max-w-3xl h-[85vh] flex flex-col overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between px-5 py-4 border-b border-white/40 dark:border-white/10 shrink-0">
+          <p className="font-bold text-slate-800 dark:text-slate-100 text-sm">
+            Certificado de Inscripción — Superintendencia de Salud
+          </p>
+          <div className="flex items-center gap-2">
+            <a
+              href={CERTIFICADO_URL}
+              download
+              className="flex items-center gap-1.5 text-xs font-semibold text-lavender-600 dark:text-lavender-300 hover:underline px-2 py-1"
+            >
+              <Download className="w-3.5 h-3.5" /> Descargar
+            </a>
+            <button
+              onClick={onClose}
+              aria-label="Cerrar"
+              className="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-white/60 dark:hover:bg-slate-700/60 transition"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+        <iframe
+          src={CERTIFICADO_URL}
+          title="Certificado de Inscripción en el Registro Nacional de Prestadores Individuales de Salud"
+          className="flex-1 w-full bg-white"
+          style={{ border: 0 }}
+        />
+      </div>
+    </div>
+  );
+};
+
 const RegistroOficial = () => {
+  const [mostrarCertificado, setMostrarCertificado] = useState(false);
+
   return (
     <section className="relative py-20 md:py-28">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -34,14 +88,12 @@ const RegistroOficial = () => {
               </div>
             </div>
 
-            <a
-              href={CERTIFICADO_URL}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={() => setMostrarCertificado(true)}
               className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-sage-500 hover:bg-sage-600 text-white font-bold text-sm shadow-lg shadow-sage-500/25 transition-all"
             >
               Ver Certificado <ExternalLink className="w-4 h-4" />
-            </a>
+            </button>
           </div>
 
           <div className="mt-8 pt-6 border-t border-white/40 dark:border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
@@ -67,6 +119,8 @@ const RegistroOficial = () => {
           </div>
         </div>
       </div>
+
+      {mostrarCertificado && <CertificadoModal onClose={() => setMostrarCertificado(false)} />}
     </section>
   );
 };

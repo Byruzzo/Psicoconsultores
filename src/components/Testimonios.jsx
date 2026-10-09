@@ -10,9 +10,9 @@ const testimonios = [
     detalle: "Terapia individual",
   },
   {
-    texto: "Comentario de ejemplo. Nos dio herramientas concretas para comunicarnos mejor como pareja.",
+    texto: "Comentario de ejemplo. Pude trabajar el estrés del trabajo con herramientas prácticas para el día a día.",
     nombre: "Tomás R.",
-    detalle: "Terapia de pareja",
+    detalle: "Terapia individual",
   },
   {
     texto: "Comentario de ejemplo. La modalidad online hizo mucho más fácil mantener la constancia en el proceso.",
@@ -25,9 +25,9 @@ const testimonios = [
     detalle: "Terapia individual",
   },
   {
-    texto: "Comentario de ejemplo. Nos ayudó a entender patrones que veníamos repitiendo hace años.",
+    texto: "Comentario de ejemplo. Me ayudó a entender patrones que venía repitiendo hace años.",
     nombre: "Antonia V.",
-    detalle: "Terapia de pareja",
+    detalle: "Terapia individual",
   },
   {
     texto: "Comentario de ejemplo. Agendar y tener la sesión por videollamada fue simple y cómodo.",
@@ -40,9 +40,9 @@ const testimonios = [
     detalle: "Terapia individual",
   },
   {
-    texto: "Comentario de ejemplo. Recomendado para parejas que quieren trabajar la comunicación en serio.",
+    texto: "Comentario de ejemplo. Un proceso breve y enfocado, justo lo que necesitaba.",
     nombre: "Diego A.",
-    detalle: "Terapia de pareja",
+    detalle: "Terapia individual",
   },
   {
     texto: "Comentario de ejemplo. Me ayudó a manejar la ansiedad con herramientas que uso hasta hoy.",

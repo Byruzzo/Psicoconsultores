@@ -22,7 +22,7 @@ const FAQ = () => {
     {
       question: "¿Cuánto dura cada sesión y con qué frecuencia son?",
       answer:
-        "Las sesiones individuales duran 45 minutos y las de pareja 60 minutos. La frecuencia habitual es semanal, aunque se puede ajustar según el proceso y la disponibilidad.",
+        "Las sesiones duran 45 minutos. La frecuencia habitual es semanal, aunque se puede ajustar según el proceso y la disponibilidad.",
     },
     {
       question: "¿Qué tan efectiva es la terapia online?",

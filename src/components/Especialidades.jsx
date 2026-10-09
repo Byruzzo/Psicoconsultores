@@ -1,5 +1,5 @@
 import React from "react";
-import { Brain, CloudRain, HeartHandshake, Sparkles, HeartCrack, Waves } from "lucide-react";
+import { Brain, CloudRain, BriefcaseBusiness, Sparkles, HeartCrack, Waves } from "lucide-react";
 
 const especialidades = [
   {
@@ -13,9 +13,9 @@ const especialidades = [
     desc: "Acompañamiento en depresión, ánimo bajo y pérdida de motivación.",
   },
   {
-    icon: HeartHandshake,
-    title: "Terapia de pareja",
-    desc: "Comunicación, conflictos y reconstrucción del vínculo.",
+    icon: BriefcaseBusiness,
+    title: "Estrés Laboral / Burnout",
+    desc: "Acompañamiento en desgaste profesional y sobrecarga en el trabajo.",
   },
   {
     icon: Sparkles,

@@ -23,8 +23,8 @@ const Footer = () => {
               </span>
             </div>
             <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
-              Psicoterapia individual y de pareja, 100% online, con un
-              enfoque cercano y profesional.
+              Psicoterapia individual, 100% online, con un enfoque cercano
+              y profesional.
             </p>
           </div>
           <div>
