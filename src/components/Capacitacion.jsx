@@ -37,9 +37,6 @@ const capacitaciones = [
   },
 ];
 
-const N_REGISTRO = "656686";
-const RUT = "19.184.909-4";
-
 const CERTIFICADO_IMG = "/certificado-superintendencia.png";
 const CERTIFICADO_PDF = "/certificado-superintendencia.pdf";
 
@@ -134,45 +131,33 @@ const Capacitacion = () => {
           </div>
 
           <div className="mt-10 pt-8 border-t border-white/40 dark:border-white/10">
-            <div className="flex items-center gap-4 mb-8">
-              <span className="text-3xl font-serif text-slate-400 dark:text-slate-500 select-none">Ψ</span>
-              <div>
-                <p className="font-bold text-slate-800 dark:text-slate-100">Ps. Carla Ruz Pardo</p>
-                <p className="text-sm text-slate-500 dark:text-slate-400">Psicóloga Clínica</p>
-                <p className="text-sm text-slate-500 dark:text-slate-400">{RUT}</p>
-                <p className="text-sm text-slate-500 dark:text-slate-400">N°Reg: {N_REGISTRO}</p>
-              </div>
-            </div>
+            <h3 className="text-xl md:text-2xl font-extrabold text-slate-900 dark:text-white mb-2">
+              Registro Oficial en la Superintendencia de Salud
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400 mb-6 max-w-2xl text-sm">
+              Profesional inscrita en el Registro Nacional de Prestadores de Salud de la
+              Superintendencia de Salud de Chile.
+            </p>
 
-            <div className="pt-6 border-t border-white/40 dark:border-white/10">
-              <h3 className="text-xl md:text-2xl font-extrabold text-slate-900 dark:text-white mb-2">
-                Registro Oficial en la Superintendencia de Salud
-              </h3>
-              <p className="text-slate-600 dark:text-slate-400 mb-6 max-w-2xl text-sm">
-                Profesional inscrita en el Registro Nacional de Prestadores de Salud de la
-                Superintendencia de Salud de Chile.
-              </p>
-
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-                <div className="flex items-center gap-4">
-                  <span className="w-14 h-14 rounded-2xl bg-lavender-100 dark:bg-lavender-500/20 text-lavender-600 dark:text-lavender-300 flex items-center justify-center shrink-0">
-                    <ShieldCheck className="w-7 h-7" />
-                  </span>
-                  <div>
-                    <p className="font-bold text-slate-800 dark:text-slate-100 text-sm leading-tight">
-                      Superintendencia de Salud
-                    </p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">Gobierno de Chile</p>
-                  </div>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+              <div className="flex items-center gap-4">
+                <span className="w-14 h-14 rounded-2xl bg-lavender-100 dark:bg-lavender-500/20 text-lavender-600 dark:text-lavender-300 flex items-center justify-center shrink-0">
+                  <ShieldCheck className="w-7 h-7" />
+                </span>
+                <div>
+                  <p className="font-bold text-slate-800 dark:text-slate-100 text-sm leading-tight">
+                    Superintendencia de Salud
+                  </p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Gobierno de Chile</p>
                 </div>
-
-                <button
-                  onClick={() => setMostrarCertificado(true)}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-sage-500 hover:bg-sage-600 text-white font-bold text-sm shadow-lg shadow-sage-500/25 transition-all"
-                >
-                  Ver Certificado <ExternalLink className="w-4 h-4" />
-                </button>
               </div>
+
+              <button
+                onClick={() => setMostrarCertificado(true)}
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-sage-500 hover:bg-sage-600 text-white font-bold text-sm shadow-lg shadow-sage-500/25 transition-all"
+              >
+                Ver Certificado <ExternalLink className="w-4 h-4" />
+              </button>
             </div>
           </div>
         </div>
