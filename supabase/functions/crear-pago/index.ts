@@ -90,6 +90,36 @@ Deno.serve(async (req) => {
       return jsonResponse({ error: "Ese horario ya no está disponible, elige otro." }, 409);
     }
 
+    // Sin esto, cualquiera podía golpear este endpoint sin límite y abrir
+    // una reserva "pendiente" en cada horario disponible (sin pagar nunca),
+    // bloqueando la agenda para pacientes reales. Se limita cuántas
+    // reservas "pendiente" recientes puede tener abiertas un mismo correo
+    // o una misma IP a la vez.
+    const ip = (req.headers.get("x-forwarded-for")?.split(",")[0] || "").trim() || null;
+    const { count: pendientesPorEmail } = await supabase
+      .from("reservas")
+      .select("id", { count: "exact", head: true })
+      .eq("email", emailLimpio)
+      .eq("estado", "pendiente")
+      .gte("created_at", limiteExpiracion.toISOString());
+    if ((pendientesPorEmail ?? 0) >= 2) {
+      return jsonResponse(
+        { error: "Ya tenés una reserva pendiente de pago. Completa ese pago o espera unos minutos antes de abrir otra." },
+        429,
+      );
+    }
+    if (ip) {
+      const { count: pendientesPorIp } = await supabase
+        .from("reservas")
+        .select("id", { count: "exact", head: true })
+        .eq("creador_ip", ip)
+        .eq("estado", "pendiente")
+        .gte("created_at", limiteExpiracion.toISOString());
+      if ((pendientesPorIp ?? 0) >= 5) {
+        return jsonResponse({ error: "Demasiados intentos. Espera unos minutos y vuelve a intentar." }, 429);
+      }
+    }
+
     const { data: reserva, error: insertError } = await supabase
       .from("reservas")
       .insert([
@@ -100,6 +130,7 @@ Deno.serve(async (req) => {
           email: emailLimpio,
           inicio: inicioDate.toISOString(),
           fin: finDate.toISOString(),
+          creador_ip: ip,
         },
       ])
       .select()
