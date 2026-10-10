@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import {
   Brain,
   CloudRain,
-  BriefcaseBusiness,
   Sparkles,
   HeartCrack,
   Waves,
@@ -24,7 +23,6 @@ const DURACION_TEXTO = "45 minutos";
 const MOTIVOS = [
   { id: "ansiedad", icon: Brain, label: "Ansiedad" },
   { id: "animo", icon: CloudRain, label: "Trastornos del ánimo" },
-  { id: "estres-laboral", icon: BriefcaseBusiness, label: "Estrés Laboral / Burnout" },
   { id: "autoestima", icon: Sparkles, label: "Autoestima" },
   { id: "duelo", icon: HeartCrack, label: "Duelo" },
   { id: "estres-postraumatico", icon: Waves, label: "Estrés Post Traumático" },
