@@ -26,7 +26,6 @@ const jsonResponse = (body: unknown, status: number) =>
   });
 
 const PRECIO_SESION_CLP = 350; // TODO: volver a 25000 después de probar el pago real ($350 es el mínimo que acepta Flow)
-const SITE_URL = "https://psicoconsultores.vercel.app"; // TODO: actualizar si cambia el dominio
 const FUNCTIONS_URL = Deno.env.get("SUPABASE_URL") + "/functions/v1";
 
 const esEmailValido = (email: unknown) =>
@@ -119,7 +118,10 @@ Deno.serve(async (req) => {
       amount: PRECIO_SESION_CLP,
       email: emailLimpio,
       urlConfirmation: `${FUNCTIONS_URL}/webhook-flow`,
-      urlReturn: `${SITE_URL}/#reservar?reserva=${reserva.id}`,
+      // Flow hace un POST a esta URL al volver, y el sitio (estático, en
+      // Vercel) no acepta POST en una ruta cualquiera -- por eso el retorno
+      // pasa primero por la función "volver-pago", que redirige con un GET.
+      urlReturn: `${FUNCTIONS_URL}/volver-pago`,
     });
 
     await supabase.from("reservas").update({ flow_token: token }).eq("id", reserva.id);

@@ -105,6 +105,7 @@ const Reservar = () => {
   const [aceptaTerminos, setAceptaTerminos] = useState(false);
   const [confirmando, setConfirmando] = useState(false);
   const [errorConfirmar, setErrorConfirmar] = useState("");
+  const [pagoNoRealizado, setPagoNoRealizado] = useState(false);
   const [resultado, setResultado] = useState(null); // { meetLink, email, nombre }
 
   const confirmarReserva = useCallback(
@@ -112,6 +113,7 @@ const Reservar = () => {
       if (!FUNCTIONS_URL || !id) return;
       setConfirmando(true);
       setErrorConfirmar("");
+      setPagoNoRealizado(false);
       try {
         const resp = await fetch(`${FUNCTIONS_URL}/confirmar-reserva`, {
           method: "POST",
@@ -119,6 +121,17 @@ const Reservar = () => {
           body: JSON.stringify({ reservaId: id }),
         });
         const data = await resp.json();
+        if (resp.status === 402) {
+          // El pago no se completó (cancelado, rechazado o anulado en Flow).
+          setPagoNoRealizado(true);
+          setErrorConfirmar(data.error || "El pago no fue efectuado. Tu hora fue liberada.");
+          return;
+        }
+        if (resp.status === 202) {
+          // Todavía no hay confirmación; no es un error del sistema.
+          setErrorConfirmar(data.error || "El pago todavía no se confirma, intenta en unos segundos.");
+          return;
+        }
         if (!resp.ok) throw new Error(data.error || "No se pudo confirmar la reserva");
         setResultado(data);
       } catch (err) {
@@ -130,8 +143,30 @@ const Reservar = () => {
     [],
   );
 
-  // Al volver de Flow, la URL trae #reservar?reserva=... (Flow no manda el
-  // resultado en la url). El paso 4 es automático: confirma solo, sin
+  // Vuelve el wizard al paso 1, limpio, para intentar agendar de nuevo
+  // (ej: después de un pago no realizado). También limpia el hash de la
+  // URL para no reabrir la misma reserva cancelada al recargar.
+  const reiniciarReserva = () => {
+    window.history.replaceState(null, "", window.location.pathname + window.location.search);
+    setPaso(1);
+    setMotivo(null);
+    setDias(null);
+    setDiaActivo(null);
+    setHorario(null);
+    setReservaId(null);
+    setErrorPago("");
+    setNombre("");
+    setTelefono("");
+    setEmail("");
+    setAceptaTerminos(false);
+    setConfirmando(false);
+    setErrorConfirmar("");
+    setPagoNoRealizado(false);
+    setResultado(null);
+  };
+
+  // Al volver de Flow, la URL trae ?reserva=... en el hash (Flow no manda
+  // el resultado en la url). El paso 4 es automático: confirma solo, sin
   // pedirle nada más a la persona (nombre/teléfono/correo ya se guardaron
   // en el paso 3, antes de pagar).
   useEffect(() => {
@@ -144,6 +179,7 @@ const Reservar = () => {
       setReservaId(reserva);
       setPaso(4);
       confirmarReserva(reserva);
+      document.getElementById("reservar")?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }, [confirmarReserva]);
 
@@ -507,17 +543,30 @@ const Reservar = () => {
                     <AlertCircle className="w-9 h-9" />
                   </div>
                   <h3 className="text-xl font-extrabold text-slate-900 dark:text-white mb-2">
-                    No pudimos confirmar
+                    {pagoNoRealizado ? "El pago no fue efectuado" : "No pudimos confirmar"}
                   </h3>
-                  <p className="text-slate-600 dark:text-slate-400 max-w-sm mx-auto mb-5">{errorConfirmar}</p>
-                  {reservaId && (
+                  <p className="text-slate-600 dark:text-slate-400 max-w-sm mx-auto mb-5">
+                    {pagoNoRealizado
+                      ? "No se registró el pago en Flow, así que tu hora fue liberada y ya no está reservada."
+                      : errorConfirmar}
+                  </p>
+                  {pagoNoRealizado ? (
                     <button
-                      onClick={() => confirmarReserva(reservaId)}
-                      disabled={confirmando}
-                      className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-lavender-500 hover:bg-lavender-600 text-white font-bold text-sm transition-all disabled:opacity-60"
+                      onClick={reiniciarReserva}
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-lavender-500 hover:bg-lavender-600 text-white font-bold text-sm transition-all"
                     >
-                      {confirmando ? <Loader2 className="w-4 h-4 animate-spin" /> : null} Intentar de nuevo
+                      Intentar de nuevo
                     </button>
+                  ) : (
+                    reservaId && (
+                      <button
+                        onClick={() => confirmarReserva(reservaId)}
+                        disabled={confirmando}
+                        className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-lavender-500 hover:bg-lavender-600 text-white font-bold text-sm transition-all disabled:opacity-60"
+                      >
+                        {confirmando ? <Loader2 className="w-4 h-4 animate-spin" /> : null} Intentar de nuevo
+                      </button>
+                    )
                   )}
                 </>
               ) : (

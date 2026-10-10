@@ -12,6 +12,7 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { crearEventoConMeet } from "../_shared/google-calendar.ts";
+import { obtenerEstadoPago, FLOW_STATUS } from "../_shared/flow.ts";
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -52,8 +53,34 @@ Deno.serve(async (req) => {
     }
 
     if (!reserva) return jsonResponse({ error: "Reserva no encontrada" }, 404);
+
+    // El webhook de Flow puede no llegar nunca (ej: la persona anula el
+    // pago y vuelve, sin completar ningún cobro -- Flow puede dejar la
+    // orden como "pendiente" indefinidamente en ese caso, nunca manda
+    // webhook). Esta función solo se llama cuando la persona ya volvió del
+    // checkout de Flow (al cargar la página, o al tocar "Intentar de
+    // nuevo"), así que si seguimos "pendiente" después de esperar, se
+    // consulta el estado real contra la API de Flow: cualquier cosa que no
+    // sea "pagada" en este punto se trata como pago no realizado, y se
+    // libera la hora en vez de dejar a la persona esperando indefinidamente.
+    if (reserva.estado === "pendiente" && reserva.flow_token) {
+      try {
+        const { status } = await obtenerEstadoPago(reserva.flow_token);
+        const { data: actualizada } = await supabase
+          .from("reservas")
+          .update({ estado: status === FLOW_STATUS.PAGADA ? "confirmada" : "cancelada" })
+          .eq("id", reservaId)
+          .eq("estado", "pendiente")
+          .select()
+          .single();
+        if (actualizada) reserva = actualizada;
+      } catch (err) {
+        console.error("No se pudo consultar el estado del pago en Flow:", err);
+      }
+    }
+
     if (reserva.estado === "cancelada") {
-      return jsonResponse({ error: "El pago no se aprobó, la reserva fue cancelada." }, 402);
+      return jsonResponse({ error: "El pago no fue efectuado. Tu hora fue liberada." }, 402);
     }
     if (reserva.estado !== "confirmada") {
       return jsonResponse({ error: "El pago todavía no se confirma, intenta en unos segundos." }, 202);
