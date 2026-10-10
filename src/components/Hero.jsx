@@ -1,23 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { Video, ShieldCheck, Clock3, ArrowRight, CalendarCheck, MessagesSquare, TrendingUp } from "lucide-react";
+import { Video, ShieldCheck, Clock3, ArrowRight } from "lucide-react";
 import Logo from "./Logo";
 
 const CONTACT_EMAIL = "psiconsultoresruz@gmail.com";
 
+// Las 3 fotos viven en un solo collage (public/hero-fotos-collage.webp,
+// tres fotos de igual ancho una al lado de la otra) para no tener que
+// subir 3 archivos sueltos -- "fotoPanel" indica cuál de los 3 tercios
+// mostrar (0 = izquierda, 1 = centro, 2 = derecha).
 const pasos = [
-  { icon: Logo, esLogo: true },
+  { esLogo: true },
   {
-    icon: CalendarCheck,
+    fotoPanel: 0,
     title: "Agenda tu hora",
     desc: "Elegí tu horario y confirmá tu sesión con el pago.",
   },
   {
-    icon: MessagesSquare,
+    fotoPanel: 1,
     title: "Primera sesión",
     desc: "Conversamos sobre lo que te trae a terapia y definimos los objetivos.",
   },
   {
-    icon: TrendingUp,
+    fotoPanel: 2,
     title: "Plan terapéutico",
     desc: "Avanzamos con sesiones periódicas, ajustando el enfoque cuando haga falta.",
   },
@@ -44,14 +48,14 @@ const HeroAvatar = () => {
     <div className="relative w-full flex items-center justify-center">
       <div className="absolute w-[280px] h-[280px] sm:w-[340px] sm:h-[340px] md:w-[400px] md:h-[400px] rounded-full bg-gradient-to-br from-lavender-200/60 to-sage-200/60 dark:from-lavender-500/10 dark:to-sage-500/10 blur-2xl -z-10" />
 
-      <div className="glass-strong relative w-[240px] h-[300px] sm:w-[280px] sm:h-[350px] md:w-[320px] md:h-[400px] rounded-[2.5rem] overflow-hidden animate-[float_6s_ease-in-out_infinite] flex flex-col items-center justify-center gap-5 px-6">
+      <div className="glass-strong relative w-[240px] h-[300px] sm:w-[280px] sm:h-[350px] md:w-[320px] md:h-[400px] rounded-[2.5rem] overflow-hidden animate-[float_6s_ease-in-out_infinite]">
         <div
-          className={`flex flex-col items-center gap-5 transition-opacity duration-400 ease-out ${
+          className={`absolute inset-0 transition-opacity duration-400 ease-out ${
             visible ? "opacity-100" : "opacity-0"
           }`}
         >
           {paso.esLogo ? (
-            <>
+            <div className="h-full flex flex-col items-center justify-center gap-5 px-6">
               <Logo className="w-20 h-20 md:w-24 md:h-24 rounded-[1.75rem]" textClassName="text-4xl md:text-5xl" />
               <div className="text-center">
                 <p className="text-slate-800 dark:text-slate-100 font-extrabold text-xl leading-tight">
@@ -59,19 +63,20 @@ const HeroAvatar = () => {
                 </p>
                 <p className="text-slate-500 dark:text-slate-400 text-sm">Psicólogos</p>
               </div>
-            </>
+            </div>
           ) : (
-            <>
-              <span className="w-20 h-20 md:w-24 md:h-24 rounded-[1.75rem] bg-gradient-to-br from-lavender-400 to-sage-400 text-white flex items-center justify-center shadow-lg shadow-lavender-500/25">
-                <paso.icon className="w-9 h-9 md:w-10 md:h-10" />
-              </span>
-              <div className="text-center px-2">
-                <p className="text-slate-800 dark:text-slate-100 font-extrabold text-lg leading-tight mb-1.5">
-                  {paso.title}
-                </p>
-                <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">{paso.desc}</p>
+            <div className="relative h-full">
+              <img
+                src="/hero-fotos-collage.webp"
+                alt={paso.title}
+                className="absolute left-0 top-1/2 w-[300%] max-w-none h-auto"
+                style={{ transform: `translate(-${paso.fotoPanel * 33.3334}%, -50%)` }}
+              />
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 via-black/35 to-transparent px-5 pt-14 pb-5">
+                <p className="text-white font-extrabold text-lg leading-tight mb-1">{paso.title}</p>
+                <p className="text-white/80 text-sm leading-relaxed">{paso.desc}</p>
               </div>
-            </>
+            </div>
           )}
         </div>
       </div>
