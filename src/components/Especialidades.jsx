@@ -1,5 +1,5 @@
 import React from "react";
-import { Brain, CloudRain, BriefcaseBusiness, Sparkles, HeartCrack, Waves } from "lucide-react";
+import { Brain, CloudRain, Sparkles, HeartCrack, Waves } from "lucide-react";
 
 const especialidades = [
   {
@@ -11,11 +11,6 @@ const especialidades = [
     icon: CloudRain,
     title: "Trastornos del estado del ánimo",
     desc: "Acompañamiento en depresión, ánimo bajo y pérdida de motivación.",
-  },
-  {
-    icon: BriefcaseBusiness,
-    title: "Estrés Laboral / Burnout",
-    desc: "Acompañamiento en desgaste profesional y sobrecarga en el trabajo.",
   },
   {
     icon: Sparkles,

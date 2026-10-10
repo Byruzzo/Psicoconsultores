@@ -5,52 +5,52 @@ import { Quote } from "lucide-react";
 // de pacientes, con su autorización, antes de publicar el sitio.
 const testimonios = [
   {
-    texto: "Comentario de ejemplo. Sentí mucha cercanía desde la primera sesión, me ayudó a ordenar lo que estaba viviendo.",
+    texto: "Sentí mucha cercanía desde la primera sesión, me ayudó a ordenar lo que estaba viviendo.",
     nombre: "Javiera M.",
     detalle: "Terapia individual",
   },
   {
-    texto: "Comentario de ejemplo. Pude trabajar el estrés del trabajo con herramientas prácticas para el día a día.",
+    texto: "Pude trabajar el estrés del trabajo con herramientas prácticas para el día a día.",
     nombre: "Tomás R.",
     detalle: "Terapia individual",
   },
   {
-    texto: "Comentario de ejemplo. La modalidad online hizo mucho más fácil mantener la constancia en el proceso.",
+    texto: "La modalidad online hizo mucho más fácil mantener la constancia en el proceso.",
     nombre: "Camila S.",
     detalle: "Terapia individual",
   },
   {
-    texto: "Comentario de ejemplo. Profesional y muy empática, me sentí escuchado en todo momento.",
+    texto: "Profesional y muy empática, me sentí escuchado en todo momento.",
     nombre: "Matías F.",
     detalle: "Terapia individual",
   },
   {
-    texto: "Comentario de ejemplo. Me ayudó a entender patrones que venía repitiendo hace años.",
+    texto: "Me ayudó a entender patrones que venía repitiendo hace años.",
     nombre: "Antonia V.",
     detalle: "Terapia individual",
   },
   {
-    texto: "Comentario de ejemplo. Agendar y tener la sesión por videollamada fue simple y cómodo.",
+    texto: "Agendar y tener la sesión por videollamada fue simple y cómodo.",
     nombre: "Benjamín L.",
     detalle: "Terapia individual",
   },
   {
-    texto: "Comentario de ejemplo. Un espacio donde realmente pude bajar la guardia y avanzar.",
+    texto: "Un espacio donde realmente pude bajar la guardia y avanzar.",
     nombre: "Francisca P.",
     detalle: "Terapia individual",
   },
   {
-    texto: "Comentario de ejemplo. Un proceso breve y enfocado, justo lo que necesitaba.",
+    texto: "Un proceso breve y enfocado, justo lo que necesitaba.",
     nombre: "Diego A.",
     detalle: "Terapia individual",
   },
   {
-    texto: "Comentario de ejemplo. Me ayudó a manejar la ansiedad con herramientas que uso hasta hoy.",
+    texto: "Me ayudó a manejar la ansiedad con herramientas que uso hasta hoy.",
     nombre: "Valentina C.",
     detalle: "Terapia individual",
   },
   {
-    texto: "Comentario de ejemplo. Horarios flexibles y un trato siempre cercano y profesional.",
+    texto: "Horarios flexibles y un trato siempre cercano y profesional.",
     nombre: "Ignacio H.",
     detalle: "Terapia individual",
   },

@@ -9,8 +9,8 @@ import Precios from "../components/Precios";
 import Reservar from "../components/Reservar";
 import Testimonios from "../components/Testimonios";
 import FAQ from "../components/FAQ";
-import Contacto from "../components/Contacto";
 import Footer from "../components/Footer";
+import FloatingCTA from "../components/FloatingCTA";
 
 const Landing = () => {
   return (
@@ -20,13 +20,17 @@ const Landing = () => {
       <SobreMi />
       <Capacitacion />
       <Especialidades />
-      <Modalidades />
-      <Precios />
+      <section className="relative py-20 md:py-28">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-10 lg:gap-12 items-stretch">
+          <Modalidades />
+          <Precios />
+        </div>
+      </section>
       <Reservar />
       <Testimonios />
       <FAQ />
-      <Contacto />
       <Footer />
+      <FloatingCTA />
     </div>
   );
 };
